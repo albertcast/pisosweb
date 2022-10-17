@@ -9,8 +9,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class PisoswebApplication implements CommandLineRunner{
 
-	//@Autowired
-	//private EjemploRepository repository;
+	@Autowired
+	private EjemploRepository repository;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(PisoswebApplication.class, args);
@@ -18,14 +18,14 @@ public class PisoswebApplication implements CommandLineRunner{
 	 
 	 @Override
 	 public void run(String... args) throws Exception {
-	 /*deleteAll();
+	 deleteAll();
 	 addSampleData();
 	 listAll();
-	 findFirst();*/
+	 findFirst();
 	 }
 	 
 	 
-	 /*
+	 
 	 public void deleteAll() {
 	 System.out.println("Deleting all records..");
 	 repository.deleteAll();
@@ -33,10 +33,10 @@ public class PisoswebApplication implements CommandLineRunner{
 	 
 	 public void addSampleData() {
 	 System.out.println("Adding sample data");
-	 repository.save(new Ejemplo("Jack Bauer", "New York"));
-	 repository.save(new Ejemplo("Harvey Spectre", "London"));
-	 repository.save(new Ejemplo("Mike Ross", "New Jersey"));
-	 repository.save(new Ejemplo("Louise Litt", "Kathmandu"));
+	 repository.save(new Ejemplo("Jack Bauer", "New York", "aaa"));
+	 repository.save(new Ejemplo("Harvey Spectre", "London", "bbb"));
+	 repository.save(new Ejemplo("Mike Ross", "New Jersey", "ccc"));
+	 repository.save(new Ejemplo("Louise Litt", "Kathmandu", "ddd"));
 	 }
 	 
 	 public void listAll() {
@@ -48,9 +48,11 @@ public class PisoswebApplication implements CommandLineRunner{
 	 System.out.println("Finding first by Name");
 	 Ejemplo u = repository.findByFirstName("Louise Litt");
 	 System.out.println(u);
+	 Ejemplo a = repository.findByAbc("aaa");
+	 System.out.println(a);
 	 }
 	 
-	 */
+	 
 	
 	
 	

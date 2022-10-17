@@ -8,5 +8,6 @@ public interface EjemploRepository extends MongoRepository<Ejemplo, String> {
 
   public Ejemplo findByFirstName(String firstName);
   public List<Ejemplo> findByLastName(String lastName);
+  public Ejemplo findByAbc(String abc);
 
 }
