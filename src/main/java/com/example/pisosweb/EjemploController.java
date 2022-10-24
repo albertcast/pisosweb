@@ -64,7 +64,30 @@ public class EjemploController {
 		return repository.findAll();
 	}
     
+    //POST SIMPLE, NO CONTROLA QUE SE METE
+    @PostMapping(value="repository")
+    public ResponseEntity<Ejemplo> addHola(Ejemplo ejemplo){
+    	repository.insert(ejemplo);
+    	return ResponseEntity.ok(ejemplo);
+    }
+    
+    //POST POR PROBAR
+    @PostMapping(value = "/{abc}")
+	@Operation(description = "Create new Ejemplo", responses = {
+			@ApiResponse(responseCode = "409", description = "Person with such e-mail already exists") })
+	public ResponseEntity<Ejemplo> addEjemplo(
+			@Parameter(description = "Abc", required = true) @PathVariable("abc") final String abc,
+			@Parameter(description = "First Name", required = true) @RequestParam("firstName") final String firstName,
+			@Parameter(description = "Last Name", required = true) @RequestParam("lastName") final String lastName) {
 
+		final Ejemplo person = repository.findByAbc(abc);
+
+		
+
+		repository.insert(new Ejemplo(firstName, lastName, abc));
+		
+		return ResponseEntity.ok(person);
+	}
     
 }
 
