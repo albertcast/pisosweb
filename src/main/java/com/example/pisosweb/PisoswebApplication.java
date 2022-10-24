@@ -14,17 +14,18 @@ public class PisoswebApplication implements CommandLineRunner{
 	
 	public static void main(String[] args) {
 		SpringApplication.run(PisoswebApplication.class, args);
-		//aaaa
 	}
-	 
+	
 	 @Override
 	 public void run(String... args) throws Exception {
+	 /*
 	 deleteAll();
 	 addSampleData();
 	 listAll();
 	 findFirst();
+	 */
 	 }
-	 
+	/* 
 	 
 	 
 	 public void deleteAll() {
@@ -52,7 +53,7 @@ public class PisoswebApplication implements CommandLineRunner{
 	 Ejemplo a = repository.findByAbc("aaa");
 	 System.out.println(a);
 	 }
-	 
+	 */
 	 
 	
 	
