@@ -1,4 +1,4 @@
-package com.example.pisosweb;
+package com.example.pisosweb.document;
 
 import org.springframework.data.annotation.Id;
 
