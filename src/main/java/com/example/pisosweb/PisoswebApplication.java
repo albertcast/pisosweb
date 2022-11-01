@@ -7,11 +7,14 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import com.example.pisosweb.mensajes.*;
+
 @SpringBootApplication
 public class PisoswebApplication implements CommandLineRunner{
 
 	@Autowired
 	private EjemploRepository repository;
+	private MensajeRepository mensajeRepository;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(PisoswebApplication.class, args);
