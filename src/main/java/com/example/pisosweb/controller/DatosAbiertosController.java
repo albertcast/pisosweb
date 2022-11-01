@@ -48,6 +48,8 @@ public class DatosAbiertosController {
 	        while ((c = reader.read()) != -1) {
 	            json.append((char) c);
 	        }
+	        
+	        input.close();
 	        return json.toString();
 	    
 	}
@@ -89,7 +91,7 @@ public class DatosAbiertosController {
 				}
 			}
 			
-			
+			rd.close();
 			return result.toString();
 			
 		} finally {
@@ -135,7 +137,7 @@ public class DatosAbiertosController {
 				resultado += ", direccion: " + jsonObject.getJSONObject("parada").getString("direccion") + ",\n";
 			}
 			
-			
+			rd.close();
 			return resultado;
 			
 		} finally {
@@ -188,7 +190,7 @@ public class DatosAbiertosController {
 				resultado += ", latitud|longitud: " + jsonObject.getJSONObject("parada").getFloat("latitud") + "|" + jsonObject.getJSONObject("parada").getFloat("longitud") + ",\n";
 			}
 			
-			
+			rd.close();
 			return resultado;
 			
 		} finally {
