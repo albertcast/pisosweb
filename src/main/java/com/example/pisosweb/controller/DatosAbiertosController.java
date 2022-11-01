@@ -34,8 +34,6 @@ import org.json.*;
 @RequestMapping("/api/ejemplo")
 public class DatosAbiertosController {
 
-	private static String urlStatic = "https://datosabiertos.ayto-arganda.es/dataset/3edc135e-0713-4557-9866-d76e8c91f223/resource/243046b4-f1b4-49e7-84ce-c09509675b15/download/registrohora3trimestre2022.json";
-	
 	
 	@Operation(description = "Introduce una url y devuelve el texto plano de la página", responses = {
 			@ApiResponse(responseCode = "200", description = "Texto plano devuelto"),
@@ -53,25 +51,6 @@ public class DatosAbiertosController {
 	        return json.toString();
 	    
 	}
-	
-	
-//	@GetMapping(value="/staticURL", produces = MediaType.APPLICATION_JSON_VALUE)
-//	public static String staticURL() {
-//		StringBuilder json = new StringBuilder();
-//	    try (InputStream input = new URL(urlStatic).openStream()) {
-//	        InputStreamReader isr = new InputStreamReader(input);
-//	        BufferedReader reader = new BufferedReader(isr);
-//	        int c;
-//	        while ((c = reader.read()) != -1) {
-//	            json.append((char) c);
-//	        }
-//	        return json.toString();
-//	    } catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//	    return json.toString();
-//	}
 	
 	private static String readAll(Reader rd) throws IOException {
 	    StringBuilder sb = new StringBuilder();
@@ -163,7 +142,7 @@ public class DatosAbiertosController {
 		}
 	}
 	
-	@Operation(description = "Introduce latitud y longitud, devuelve las paradas de autobus más cercanas en un determinado radio", responses = {
+	@Operation(description = "Introduce latitud y longitud, devuelve las paradas de autobus más cercanas en un determinado radio. Ejemplo: latitud 36.737835, longitud -4.4222507, rango 0.005. Tarda un rato. ", responses = {
 			@ApiResponse(responseCode = "200", description = "Paradas encontradas") })
 	@GetMapping(value="/mostrarParadasBusCercana")
 	public static String mostrarParadasBusCercana(float latitud, float longitud, float rango) throws IOException{
@@ -194,7 +173,7 @@ public class DatosAbiertosController {
 					JSONObject aux = arrayParadas.getJSONObject(i);
 					//Buscar parada
 					float auxLat = aux.getJSONObject("parada").getFloat("latitud"), auxLong = aux.getJSONObject("parada").getFloat("longitud");					
-					if(Math.abs(latitud - auxLat) + Math.abs(longitud - auxLong) < rango) {
+					if((Math.abs(latitud - auxLat) + Math.abs(longitud - auxLong)) < rango) {
 						paradasList.add(arrayParadas.getJSONObject(i));
 					}
 				}
