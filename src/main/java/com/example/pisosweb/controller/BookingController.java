@@ -12,6 +12,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
@@ -36,6 +37,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.example.pisosweb.document.Booking;
+import com.example.pisosweb.document.Comentario;
+import com.example.pisosweb.document.Vivienda;
 import com.example.pisosweb.repository.BookingRepository;
 
 
@@ -109,15 +112,41 @@ public class BookingController {
 		return repository.findAll();
 	}
 	
-	/*public List<Booking> findByGuest(String guest){
-		List<Booking> lista = repository.findAll();
-		List<Booking> lista2 = new ArrayList<Booking>();
-		for(Booking b : lista) {
-			if(b.guest.contains(guest))lista2.add(b);
-		}
-		lista2.sort(new DateComparator().reversed());
-		return lista2;
-	}*/
+	@PostMapping(value = "/addBooking")
+    public ResponseEntity<Booking> addBooking(
+            @Parameter(description = "guest", required = true) @RequestParam("guest") final String guest,
+            @Parameter(description = "arrivalDate", required = true) @RequestParam("arrivalDate") @DateTimeFormat(pattern = "yyyy-MM-dd") final LocalDate arrivalDate,
+            @Parameter(description = "departureDate", required = true) @RequestParam("departureDate") @DateTimeFormat(pattern = "yyyy-MM-dd") final LocalDate departureDate,
+            @Parameter(description = "apartment", required = true) @RequestParam("apartment") final String apartment) throws ParseException {
+        Booking booking = repository.insert(new Booking(guest, arrivalDate, departureDate, apartment));
+        return ResponseEntity.ok(booking);
+    }
+	
+	@PutMapping(value = "/updateBooking")
+    public ResponseEntity<Booking> updateBooking(
+    		@Parameter(description = "id", required = true) @RequestParam("id") final String id,
+    		@Parameter(description = "guest", required = true) @RequestParam("guest") final String guest,
+            @Parameter(description = "arrivalDate", required = true) @RequestParam("arrivalDate") @DateTimeFormat(pattern = "yyyy-MM-dd") final LocalDate arrivalDate,
+            @Parameter(description = "departureDate", required = true) @RequestParam("departureDate") @DateTimeFormat(pattern = "yyyy-MM-dd") final LocalDate departureDate,
+            @Parameter(description = "apartment", required = true) @RequestParam("apartment") final String apartment) throws ParseException  {
+            Optional<Booking> bookingOpt = repository.findById(id);
+            if(!bookingOpt.isEmpty()) {
+                Booking booking = bookingOpt.get();
+                booking.setArrivalDate(arrivalDate);
+                booking.setDepartureDate(departureDate);
+                booking.setGuest(guest);
+                booking.setApartment(apartment);
+                booking = repository.save(booking);
+                return ResponseEntity.ok(booking);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        }
+	@DeleteMapping(value = "/{id}")
+    public void deleteBooking(@PathVariable("id") final String id) {
+        Booking booking = repository.findById(id).get();
+        repository.delete(booking);
+    }
 
 }
 
