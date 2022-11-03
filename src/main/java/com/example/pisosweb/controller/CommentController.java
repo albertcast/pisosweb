@@ -1,14 +1,21 @@
 package com.example.pisosweb.controller;
 
+import com.example.pisosweb.document.Apartment;
 import com.example.pisosweb.document.Comment;
+import com.example.pisosweb.document.User;
+import com.example.pisosweb.repository.ApartmentRepository;
 import com.example.pisosweb.repository.CommentRepository;
+import com.example.pisosweb.repository.UserRepository;
+import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/comment")
@@ -16,6 +23,11 @@ public class CommentController {
 
     @Autowired
     private CommentRepository commentRepository;
+
+    @Autowired
+    private ApartmentRepository apartmentRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @GetMapping("/")
     private ResponseEntity<List<Comment>> findAll(){
@@ -53,27 +65,49 @@ public class CommentController {
         }
     }
 
-    @PostMapping("")
-    private ResponseEntity<Comment> addComment(@RequestBody Comment comment){
+    @PostMapping("/addComment")
+    private ResponseEntity<Comment> addComment(@Parameter(description = "user", required = true) @RequestParam("user") final String user,
+                                                @Parameter(description = "apartment", required = true) @RequestParam("apartment") final String apartment,
+                                                @Parameter(description = "text", required = true) @RequestParam("text") final String text,
+                                               @Parameter(description = "rating", required = true) @RequestParam("rating") final String rating){
         try{
-            //Vivienda vivienda = viviendaRepository.findById(comentario.getVivienda());
-            //Usuario usuario = usuarioRepository.findById(comentario.getUsuario());
+            Apartment ap = apartmentRepository.findById(apartment).get();
+            User usr = userRepository.findById(user).get();
+            Comment comment;
 
-            //if(vivienda != null && usuario != null) { throw new Exception();}
+            if(ap == null || usr == null) { throw new Exception();}
+            comment = new Comment(text,rating,usr,ap);
             return new ResponseEntity<>(comment, HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-    @DeleteMapping("/delete/{id}")
-    private ResponseEntity<Comment> deleteComment(@PathVariable final String id){
-        try{
-            commentRepository.deleteById(id);
-            return new ResponseEntity<>(HttpStatus.OK);
-        }catch (Exception e){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    @PutMapping(value = "/updateComment")
+    public ResponseEntity<Comment> updateUser(
+            @Parameter(description = "id", required = true) @RequestParam("id") final String id,
+            @Parameter(description = "user", required = true) @RequestParam("user") final String user,
+            @Parameter(description = "apartment", required = true) @RequestParam("apartment") final String apartment,
+            @Parameter(description = "text", required = true) @RequestParam("text") final String text,
+            @Parameter(description = "rating", required = true) @RequestParam("rating") final String rating) throws ParseException {
+        Optional<Comment> commentOpt = commentRepository.findById(id);
+        if(!commentOpt.isEmpty()) {
+            Comment comment = commentOpt.get();
+            comment.setUser(user);
+            comment.setApartment(apartment);
+            comment.setText(text);
+            comment.setRating(rating);
+            comment = commentRepository.save(comment);
+            return ResponseEntity.ok(comment);
+        } else {
+            return ResponseEntity.notFound().build();
         }
     }
+
+    @DeleteMapping("/delete/{id}")
+    private void deleteComment(@PathVariable final String id){
+        commentRepository.deleteById(id);
+    }
+
 
 }

@@ -30,6 +30,13 @@ public class Comment implements Serializable {
     @NonNull
     private String user;
 
+	public Comment(String text, String rating, User usr, Apartment ap) {
+		this.text = text;
+		this.rating = rating;
+		user = usr.getUsuarioId();
+		apartment = ap.getId();
+	}
+
 	public String getId() {
 		return id;
 	}
