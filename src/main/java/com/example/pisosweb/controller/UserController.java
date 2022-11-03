@@ -104,10 +104,10 @@ public class UserController {
         List<Comment> flatComments = comentarioRepository.findByApartment(vivienda).get();
 
         for(Comment c : flatComments) {
-            String usuario = c.getUsuario();
-            if(!commentUsersIds.contains(usuario)) {
-                commentUsersIds.add(usuario);
-                commentUsers.add(this.findById(usuario).get());
+            String user = c.getUser();
+            if(!commentUsersIds.contains(user)) {
+                commentUsersIds.add(user);
+                commentUsers.add(this.findById(user).get());
             }
         }
 
@@ -157,8 +157,8 @@ public class UserController {
     
     @DeleteMapping(value = "/{id}")
     public void deleteUser(@PathVariable("id") final String id) {
-        User usuario = userRepository.findById(id).get();
-        userRepository.delete(usuario);
+        User user = userRepository.findById(id).get();
+        userRepository.delete(user);
     }
 
 }
