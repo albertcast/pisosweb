@@ -12,12 +12,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.pisosweb.document.Comentario;
-import com.example.pisosweb.document.Mensaje;
-import com.example.pisosweb.document.Usuario;
-import com.example.pisosweb.repository.ComentarioRepository;
-import com.example.pisosweb.repository.MensajeRepository;
-import com.example.pisosweb.repository.UsuarioRepository;
+import com.example.pisosweb.document.Comment;
+import com.example.pisosweb.document.Message;
+import com.example.pisosweb.document.User;
+import com.example.pisosweb.repository.CommentRepository;
+import com.example.pisosweb.repository.MessageRepository;
+import com.example.pisosweb.repository.UserRepository;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -27,58 +27,58 @@ import java.util.Optional;
 
 
 @RestController
-@RequestMapping("/api/usuario")
-public class UsuarioController {
+@RequestMapping("/api/user")
+public class UserController {
 
 	@Autowired
-    private UsuarioRepository userRepository;
+    private UserRepository userRepository;
     @Autowired
-    private MensajeRepository mensajeRepository;
+    private MessageRepository mensajeRepository;
     @Autowired
-    private ComentarioRepository comentarioRepository;
+    private CommentRepository comentarioRepository;
     
 	
     @GetMapping("/{id}")
-    public Optional<Usuario> findById(@PathVariable String id) {
+    public Optional<User> findById(@PathVariable String id) {
         return userRepository.findById(id);
     }
 
     @GetMapping(value = "/email", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(description = "List all users by email", responses = {
-			@ApiResponse(content = @Content(array = @ArraySchema(schema = @Schema(implementation = Usuario.class))), responseCode = "200") })
-	public Collection<Usuario> getAllUsersByEmail(
+			@ApiResponse(content = @Content(array = @ArraySchema(schema = @Schema(implementation = User.class))), responseCode = "200") })
+	public Collection<User> getAllUsersByEmail(
         @Parameter(description = "email", required = true) @RequestParam("email") final String email) {
 		return userRepository.findByEmail(email);
 	}
     
     @GetMapping(value = "/name", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(description = "List all users by name", responses = {
-			@ApiResponse(content = @Content(array = @ArraySchema(schema = @Schema(implementation = Usuario.class))), responseCode = "200") })
-	public Collection<Usuario> getAllUsersByName(
+			@ApiResponse(content = @Content(array = @ArraySchema(schema = @Schema(implementation = User.class))), responseCode = "200") })
+	public Collection<User> getAllUsersByName(
         @Parameter(description = "name", required = true) @RequestParam("name") final String name) {
 		return userRepository.findByName(name);
 	}
 
     @GetMapping(value = "/lastname", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(description = "List all users by lastname", responses = {
-			@ApiResponse(content = @Content(array = @ArraySchema(schema = @Schema(implementation = Usuario.class))), responseCode = "200") })
-	public Collection<Usuario> getAllUsersByLastname(
+			@ApiResponse(content = @Content(array = @ArraySchema(schema = @Schema(implementation = User.class))), responseCode = "200") })
+	public Collection<User> getAllUsersByLastname(
         @Parameter(description = "lastname", required = true) @RequestParam("lastname") final String lastname) {
 		return userRepository.findByLastname(lastname);
 	}
 
     @GetMapping(value = "/chatsUsers", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(description = "List all persons that chat with a specific user", responses = {
-			@ApiResponse(content = @Content(array = @ArraySchema(schema = @Schema(implementation = Usuario.class))), responseCode = "200") })
-	public Collection<Usuario> getAllUsersChatting(
+			@ApiResponse(content = @Content(array = @ArraySchema(schema = @Schema(implementation = User.class))), responseCode = "200") })
+	public Collection<User> getAllUsersChatting(
         @Parameter(description = "usuarioId", required = true) @RequestParam("usuarioId") final String usuarioId) {
-        List<Mensaje> userMessages = new ArrayList<>();
+        List<Message> userMessages = new ArrayList<>();
         userMessages.addAll(mensajeRepository.findBySender(usuarioId));
         userMessages.addAll(mensajeRepository.findByReceiver(usuarioId));
         List<String> userIds = new ArrayList<>();
-        List<Usuario> usersChatting = new ArrayList<>();
+        List<User> usersChatting = new ArrayList<>();
         
-        for(Mensaje m : userMessages) {
+        for(Message m : userMessages) {
             String sender = m.getSender();
             String receiver = m.getReceiver();
             if(sender.equals(usuarioId) && !userIds.contains(receiver)) {
@@ -96,14 +96,14 @@ public class UsuarioController {
 
     @GetMapping(value = "/commentUsersFlat", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(description = "List all users that have sent at least one comment for a specific flat", responses = {
-			@ApiResponse(content = @Content(array = @ArraySchema(schema = @Schema(implementation = Usuario.class))), responseCode = "200") })
-	public Collection<Usuario> getAllCommentsUsersByFlat(
+			@ApiResponse(content = @Content(array = @ArraySchema(schema = @Schema(implementation = User.class))), responseCode = "200") })
+	public Collection<User> getAllCommentsUsersByFlat(
         @Parameter(description = "vivienda", required = true) @RequestParam("vivienda") final String vivienda) {
-        List<Usuario> commentUsers = new ArrayList<>();
+        List<User> commentUsers = new ArrayList<>();
         List<String> commentUsersIds = new ArrayList<>();
-        List<Comentario> flatComments = comentarioRepository.findByVivienda(vivienda).get();
+        List<Comment> flatComments = comentarioRepository.findByApartment(vivienda).get();
 
-        for(Comentario c : flatComments) {
+        for(Comment c : flatComments) {
             String usuario = c.getUsuario();
             if(!commentUsersIds.contains(usuario)) {
                 commentUsersIds.add(usuario);
@@ -117,33 +117,33 @@ public class UsuarioController {
 
     @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(description = "List all users", responses = {
-			@ApiResponse(content = @Content(array = @ArraySchema(schema = @Schema(implementation = Usuario.class))), responseCode = "200") })
-	public Collection<Usuario> getAll() {
+			@ApiResponse(content = @Content(array = @ArraySchema(schema = @Schema(implementation = User.class))), responseCode = "200") })
+	public Collection<User> getAll() {
 		return userRepository.findAll();
 	}
     
     
     @PostMapping(value = "/addUser")
-    public ResponseEntity<Usuario> addUser(
+    public ResponseEntity<User> addUser(
     		@Parameter(description = "email", required = true) @RequestParam("email") final String email,
             @Parameter(description = "name", required = true) @RequestParam("name") final String name,
             @Parameter(description = "lastname", required = true) @RequestParam("lastname") final String lastname,
             @Parameter(description = "age", required = true) @RequestParam("age") final Integer age) throws ParseException {
-        Usuario user = userRepository.insert(new Usuario(email, name, lastname, age));
+        User user = userRepository.insert(new User(email, name, lastname, age));
         return ResponseEntity.ok(user);
     }
     
     
     @PutMapping(value = "/updateUser")
-    public ResponseEntity<Usuario> updateUser(
+    public ResponseEntity<User> updateUser(
         @Parameter(description = "id", required = true) @RequestParam("id") final String id,
         @Parameter(description = "email", required = false) @RequestParam("email") final String email,
         @Parameter(description = "name", required = false) @RequestParam("name") final String name,
         @Parameter(description = "lastname", required = false) @RequestParam("lastname") final String lastname,
         @Parameter(description = "age", required = false) @RequestParam("age") final Integer age) throws ParseException  {
-            Optional<Usuario> userOpt = userRepository.findById(id);
+            Optional<User> userOpt = userRepository.findById(id);
             if(!userOpt.isEmpty()) {
-                Usuario user = userOpt.get();
+                User user = userOpt.get();
                 user.setEmail(email);
                 user.setNombre(name);
                 user.setApellidos(lastname);
@@ -157,7 +157,7 @@ public class UsuarioController {
     
     @DeleteMapping(value = "/{id}")
     public void deleteUser(@PathVariable("id") final String id) {
-        Usuario usuario = userRepository.findById(id).get();
+        User usuario = userRepository.findById(id).get();
         userRepository.delete(usuario);
     }
 

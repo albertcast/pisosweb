@@ -37,8 +37,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.example.pisosweb.document.Booking;
-import com.example.pisosweb.document.Comentario;
-import com.example.pisosweb.document.Vivienda;
+import com.example.pisosweb.document.Comment;
+import com.example.pisosweb.document.Apartment;
 import com.example.pisosweb.repository.BookingRepository;
 
 

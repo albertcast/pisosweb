@@ -1,7 +1,7 @@
 package com.example.pisosweb.controller;
 
-import com.example.pisosweb.document.Comentario;
-import com.example.pisosweb.repository.ComentarioRepository;
+import com.example.pisosweb.document.Comment;
+import com.example.pisosweb.repository.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,65 +11,65 @@ import java.util.Collection;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/comentario")
-public class ComentarioController {
+@RequestMapping("/api/comment")
+public class CommentController {
 
     @Autowired
-    private ComentarioRepository comentarioRepository;
+    private CommentRepository commentRepository;
 
     @GetMapping("/")
-    private ResponseEntity<List<Comentario>> findAll(){
+    private ResponseEntity<List<Comment>> findAll(){
         try{
-            return new ResponseEntity<>(comentarioRepository.findAll(), HttpStatus.OK);
+            return new ResponseEntity<>(commentRepository.findAll(), HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @GetMapping("/{id}")
-    private ResponseEntity<Comentario> findById(@PathVariable final String id){
+    private ResponseEntity<Comment> findById(@PathVariable final String id){
         try{
-            return new ResponseEntity<>(comentarioRepository.findById(id).get(), HttpStatus.OK);
+            return new ResponseEntity<>(commentRepository.findById(id).get(), HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @GetMapping("/vivienda/{id}")
-    private ResponseEntity<List<Comentario>> findByVivienda(@PathVariable final String id){
+    private ResponseEntity<List<Comment>> findByApartment(@PathVariable final String id){
         try{
-            return new ResponseEntity<>(comentarioRepository.findByVivienda(id).get(), HttpStatus.OK);
+            return new ResponseEntity<>(commentRepository.findByApartment(id).get(), HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @GetMapping("/usuario/{id}")
-    private ResponseEntity<List<Comentario>> findByUsuario(@PathVariable final String id){
+    private ResponseEntity<List<Comment>> findByUser(@PathVariable final String id){
         try{
-            return new ResponseEntity<>(comentarioRepository.findByUsuario(id).get(), HttpStatus.OK);
+            return new ResponseEntity<>(commentRepository.findByUser(id).get(), HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @PostMapping("")
-    private ResponseEntity<Comentario> addComentario(@RequestBody Comentario comentario){
+    private ResponseEntity<Comment> addComment(@RequestBody Comment comment){
         try{
             //Vivienda vivienda = viviendaRepository.findById(comentario.getVivienda());
             //Usuario usuario = usuarioRepository.findById(comentario.getUsuario());
 
             //if(vivienda != null && usuario != null) { throw new Exception();}
-            return new ResponseEntity<>(comentario, HttpStatus.OK);
+            return new ResponseEntity<>(comment, HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @DeleteMapping("/borrar/{id}")
-    private ResponseEntity<Comentario> deleteComentario(@PathVariable final String id){
+    private ResponseEntity<Comment> deleteComment(@PathVariable final String id){
         try{
-            comentarioRepository.deleteById(id);
+            commentRepository.deleteById(id);
             return new ResponseEntity<>(HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

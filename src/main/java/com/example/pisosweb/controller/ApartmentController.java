@@ -32,48 +32,48 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.pisosweb.document.Vivienda;
-import com.example.pisosweb.repository.ViviendaRepository;
+import com.example.pisosweb.document.Apartment;
+import com.example.pisosweb.repository.ApartmentRepository;
 
 @RestController
-@RequestMapping("/api/vivienda")
-public class ViviendaController {
+@RequestMapping("/api/apartment")
+public class ApartmentController {
     
     @Autowired
-    private ViviendaRepository repository;
+    private ApartmentRepository repository;
     String pattern = "MM-dd-yyyy";
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 
     @GetMapping("/{id}")
-    public Optional<Vivienda> findById(@PathVariable String id) {
+    public Optional<Apartment> findById(@PathVariable String id) {
         return repository.findById(id);
     }
 
     @GetMapping(value = "/place", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(description = "List all flats by place", responses = {
-			@ApiResponse(content = @Content(array = @ArraySchema(schema = @Schema(implementation = Vivienda.class))), responseCode = "200") })
-	public Collection<Vivienda> getAllFlatsByPlace(
+			@ApiResponse(content = @Content(array = @ArraySchema(schema = @Schema(implementation = Apartment.class))), responseCode = "200") })
+	public Collection<Apartment> getAllFlatsByPlace(
         @Parameter(description = "place", required = true) @RequestParam("place") final String place) {
 		return repository.findByPlace(place);
 	}
 
     @GetMapping(value = "/date", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(description = "List all flats by date", responses = {
-			@ApiResponse(content = @Content(array = @ArraySchema(schema = @Schema(implementation = Vivienda.class))), responseCode = "200") })
-	public Collection<Vivienda> getAllFlatsByDate(
+			@ApiResponse(content = @Content(array = @ArraySchema(schema = @Schema(implementation = Apartment.class))), responseCode = "200") })
+	public Collection<Apartment> getAllFlatsByDate(
         @Parameter(description = "date", required = true) @RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") final Date date) {
             return repository.findByDate(date);
 	    }
 
     @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(description = "List all flats", responses = {
-			@ApiResponse(content = @Content(array = @ArraySchema(schema = @Schema(implementation = Vivienda.class))), responseCode = "200") })
-	public Collection<Vivienda> getAllFlats() {
+			@ApiResponse(content = @Content(array = @ArraySchema(schema = @Schema(implementation = Apartment.class))), responseCode = "200") })
+	public Collection<Apartment> getAllFlats() {
 		return repository.findAll();
 	}
 
     @PostMapping(value = "/addFlat")
-    public ResponseEntity<Vivienda> addFlat(
+    public ResponseEntity<Apartment> addFlat(
             @Parameter(description = "title", required = true) @RequestParam("title") final String title,
             @Parameter(description = "place", required = true) @RequestParam("place") final String place,
             @Parameter(description = "description", required = true) @RequestParam("description") final String description,
@@ -81,29 +81,29 @@ public class ViviendaController {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         calendar.add(Calendar.HOUR_OF_DAY, 1);
-        Vivienda vivienda = repository.insert(new Vivienda(title, place, description, calendar.getTime()));
-        return ResponseEntity.ok(vivienda);
+        Apartment apartment = repository.insert(new Apartment(title, place, description, calendar.getTime()));
+        return ResponseEntity.ok(apartment);
     }
 
     @PutMapping(value = "/updateFlat")
-    public ResponseEntity<Vivienda> updateFlat(
+    public ResponseEntity<Apartment> updateFlat(
         @Parameter(description = "id", required = true) @RequestParam("id") final String id,
         @Parameter(description = "title", required = false) @RequestParam("title") final String title,
         @Parameter(description = "place", required = false) @RequestParam("place") final String place,
         @Parameter(description = "description", required = false) @RequestParam("description") final String description,
         @Parameter(description = "date", required = false) @RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") final Date date) throws ParseException  {
-            Optional<Vivienda> viviendaOpt = repository.findById(id);
-            if(!viviendaOpt.isEmpty()) {
-                Vivienda vivienda = viviendaOpt.get();
+            Optional<Apartment> apartmentOpt = repository.findById(id);
+            if(!apartmentOpt.isEmpty()) {
+                Apartment apartment = apartmentOpt.get();
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(date);
                 calendar.add(Calendar.HOUR_OF_DAY, 1);
-                vivienda.setDate(calendar.getTime());
-                vivienda.setTitle(title);
-                vivienda.setPlace(place);
-                vivienda.setDescription(description);
-                vivienda = repository.save(vivienda);
-                return ResponseEntity.ok(vivienda);
+                apartment.setDate(calendar.getTime());
+                apartment.setTitle(title);
+                apartment.setPlace(place);
+                apartment.setDescription(description);
+                apartment = repository.save(apartment);
+                return ResponseEntity.ok(apartment);
             } else {
                 return ResponseEntity.notFound().build();
             }
@@ -112,8 +112,8 @@ public class ViviendaController {
 
     @DeleteMapping(value = "/{id}")
     public void deleteFlat(@PathVariable("id") final String id) {
-        Vivienda vivienda = repository.findById(id).get();
-        repository.delete(vivienda);
+        Apartment apartment = repository.findById(id).get();
+        repository.delete(apartment);
     }
 
 }

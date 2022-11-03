@@ -27,40 +27,40 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.pisosweb.document.Mensaje;
-import com.example.pisosweb.repository.MensajeRepository;
+import com.example.pisosweb.document.Message;
+import com.example.pisosweb.repository.MessageRepository;
 
 @RestController
-@RequestMapping("/api/mensajes")
-public class MensajeController {
+@RequestMapping("/api/messages")
+public class MessageController {
     
     @Autowired
-    private MensajeRepository repository;
+    private MessageRepository repository;
 
     @GetMapping("/{id}")
-    public Optional<Mensaje> findById(@PathVariable String id) {
+    public Optional<Message> findById(@PathVariable String id) {
         return repository.findById(id);
     }
 
     @GetMapping(value = "/sender/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(description = "List all messages by one sender", responses = {
-			@ApiResponse(content = @Content(array = @ArraySchema(schema = @Schema(implementation = Mensaje.class))), responseCode = "200") })
-	public Collection<Mensaje> getAllSenderMessages(@PathVariable String userId) {
+			@ApiResponse(content = @Content(array = @ArraySchema(schema = @Schema(implementation = Message.class))), responseCode = "200") })
+	public Collection<Message> getAllSenderMessages(@PathVariable String userId) {
 		return repository.findBySender(userId);
 	}
 
     @GetMapping(value = "/receiver/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(description = "List all messages by one sender", responses = {
-			@ApiResponse(content = @Content(array = @ArraySchema(schema = @Schema(implementation = Mensaje.class))), responseCode = "200") })
-	public Collection<Mensaje> getAllReceiverMessages(@PathVariable String userId) {
+			@ApiResponse(content = @Content(array = @ArraySchema(schema = @Schema(implementation = Message.class))), responseCode = "200") })
+	public Collection<Message> getAllReceiverMessages(@PathVariable String userId) {
 		return repository.findByReceiver(userId);
 	}
 
     @GetMapping(value = "/chats/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(description = "List all conversations by one user", responses = {
-			@ApiResponse(content = @Content(array = @ArraySchema(schema = @Schema(implementation = Mensaje.class))), responseCode = "200") })
-	public Collection<Mensaje> getAllUserMessages(@PathVariable String userId) {
-        List<Mensaje> allMessages = new ArrayList<>();
+			@ApiResponse(content = @Content(array = @ArraySchema(schema = @Schema(implementation = Message.class))), responseCode = "200") })
+	public Collection<Message> getAllUserMessages(@PathVariable String userId) {
+        List<Message> allMessages = new ArrayList<>();
         allMessages.addAll(this.getAllSenderMessages(userId));
         allMessages.addAll(this.getAllReceiverMessages(userId));
 		return allMessages;
@@ -68,13 +68,13 @@ public class MensajeController {
 
     @GetMapping(value = "/user/{firstUserId}/{secondUserId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(description = "List a full conversation between two users", responses = {
-            @ApiResponse(content = @Content(array = @ArraySchema(schema = @Schema(implementation = Mensaje.class))), responseCode = "200") })
-    public Collection<Mensaje> findBySenderAndReceiver(@PathVariable String firstUserId, @PathVariable String secondUserId) {
-        List<Mensaje> fullConversation = new ArrayList<>();
+            @ApiResponse(content = @Content(array = @ArraySchema(schema = @Schema(implementation = Message.class))), responseCode = "200") })
+    public Collection<Message> findBySenderAndReceiver(@PathVariable String firstUserId, @PathVariable String secondUserId) {
+        List<Message> fullConversation = new ArrayList<>();
         fullConversation.addAll(repository.findBySenderAndReceiver(firstUserId, secondUserId));
         fullConversation.addAll(repository.findBySenderAndReceiver(secondUserId, firstUserId));
-        Collections.sort(fullConversation, new Comparator<Mensaje>() {
-            public int compare(Mensaje m1, Mensaje m2) {
+        Collections.sort(fullConversation, new Comparator<Message>() {
+            public int compare(Message m1, Message m2) {
                 return m1.getDate().compareTo(m2.getDate());
             }
         });
@@ -84,30 +84,30 @@ public class MensajeController {
 
     @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(description = "List all messages", responses = {
-			@ApiResponse(content = @Content(array = @ArraySchema(schema = @Schema(implementation = Mensaje.class))), responseCode = "200") })
-	public Collection<Mensaje> getAllMessages() {
+			@ApiResponse(content = @Content(array = @ArraySchema(schema = @Schema(implementation = Message.class))), responseCode = "200") })
+	public Collection<Message> getAllMessages() {
 		return repository.findAll();
 	}
 
     @PostMapping(value = "/")
-    public ResponseEntity<Mensaje> addMensaje(
+    public ResponseEntity<Message> addMensaje(
             @Parameter(description = "sender", required = true) @RequestParam("sender") final String sender,
             @Parameter(description = "receiver", required = true) @RequestParam("receiver") final String receiver,
             @Parameter(description = "content", required = true) @RequestParam("content") final String content) {
 
-        Mensaje mensaje = repository.insert(new Mensaje(sender, receiver, content, new Date(System.currentTimeMillis())));
+        Message mensaje = repository.insert(new Message(sender, receiver, content, new Date(System.currentTimeMillis())));
         return ResponseEntity.ok(mensaje);
     
     }
 
     @PutMapping(value = "/")
-    public ResponseEntity<Mensaje> updateMessage(
+    public ResponseEntity<Message> updateMessage(
         @Parameter(description = "id", required = true) @RequestParam("id") final String id,
         @Parameter(description = "content", required = true) @RequestParam("content") final String content) {
             
-            Optional<Mensaje> mensajeOpt = repository.findById(id);
+            Optional<Message> mensajeOpt = repository.findById(id);
             if(!mensajeOpt.isEmpty()) {
-                Mensaje mensaje = mensajeOpt.get();
+                Message mensaje = mensajeOpt.get();
                 mensaje.setContent(content);
                 mensaje = repository.save(mensaje);
                 return ResponseEntity.ok(mensaje);
@@ -119,7 +119,7 @@ public class MensajeController {
 
     @DeleteMapping(value = "/{id}")
     public void deleteMessage(@PathVariable("id") final String id) {
-            Mensaje mensaje = repository.findById(id).get();
+            Message mensaje = repository.findById(id).get();
             repository.delete(mensaje);
         }
 

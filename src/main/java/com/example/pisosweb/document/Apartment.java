@@ -4,7 +4,7 @@ import java.util.Date;
 
 import org.springframework.data.annotation.Id;
 
-public class Vivienda { 
+public class Apartment { 
     @Id
     private String id;
     private String title;
@@ -12,9 +12,9 @@ public class Vivienda {
     private String description;
     private Date date;
 
-    public Vivienda() {}
+    public Apartment() {}
 
-    public Vivienda(String title, String place, String description, Date date) {
+    public Apartment(String title, String place, String description, Date date) {
         this.title = title;
         this.place = place;
         this.description = description;

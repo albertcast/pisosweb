@@ -13,20 +13,20 @@ import java.io.Serializable;
 @Getter
 @ToString
 @Document(collection = "comentarios")
-public class Comentario implements Serializable {
+public class Comment implements Serializable {
     @Id
     @NonNull
     private String id;
 
     @NonNull
-    private String texto;
+    private String text;
 
     @NonNull
-    private String valoracion;
+    private String rating;
 
     @NonNull
-    private String vivienda;
+    private String apartment;
 
     @NonNull
-    private String usuario;
+    private String user;
 }

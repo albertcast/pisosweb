@@ -3,7 +3,7 @@ package com.example.pisosweb.document;
 import nonapi.io.github.classgraph.json.Id;
 
 
-public class Usuario{
+public class User{
 
 	@Id
 	private String id;
@@ -12,10 +12,10 @@ public class Usuario{
 	private String lastname;
 	private Integer age;
 	
-	public Usuario() {
+	public User() {
 	}
 	
-	public Usuario(String email, String name, String lastname, Integer age) {
+	public User(String email, String name, String lastname, Integer age) {
 		
 		this.email=email;
 		this.name=name;

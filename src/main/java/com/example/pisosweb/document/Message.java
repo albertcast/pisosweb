@@ -4,7 +4,7 @@ import java.util.Date;
 
 import org.springframework.data.annotation.Id;
 
-public class Mensaje {
+public class Message {
     @Id
     private String id;
     private String sender;
@@ -12,9 +12,9 @@ public class Mensaje {
     private String content;
     private Date date;
     
-    public Mensaje() {}
+    public Message() {}
 
-    public Mensaje(String sender, String receiver, String content, Date date) {
+    public Message(String sender, String receiver, String content, Date date) {
         this.sender = sender;
         this.receiver = receiver;
         this.content = content;
