@@ -1,4 +1,4 @@
-package com.example.pisosweb.viviendas;
+package com.example.pisosweb.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -31,6 +31,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.example.pisosweb.document.Vivienda;
+import com.example.pisosweb.repository.ViviendaRepository;
 
 @RestController
 @RequestMapping("/api/vivienda")

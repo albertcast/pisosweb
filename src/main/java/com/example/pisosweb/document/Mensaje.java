@@ -1,4 +1,4 @@
-package com.example.pisosweb.mensajes;
+package com.example.pisosweb.document;
 
 import java.util.Date;
 

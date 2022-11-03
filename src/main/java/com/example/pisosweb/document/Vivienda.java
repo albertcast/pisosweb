@@ -1,4 +1,4 @@
-package com.example.pisosweb.viviendas;
+package com.example.pisosweb.document;
 
 import java.util.Date;
 

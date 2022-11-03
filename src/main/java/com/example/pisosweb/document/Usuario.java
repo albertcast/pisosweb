@@ -1,4 +1,4 @@
-package com.example.pisosweb.usuarios;
+package com.example.pisosweb.document;
 
 import nonapi.io.github.classgraph.json.Id;
 
@@ -6,7 +6,7 @@ import nonapi.io.github.classgraph.json.Id;
 public class Usuario{
 
 	@Id
-	private Integer usuarioId;
+	private String id;
 	private String email;
 	private String name;
 	private String lastname;
@@ -23,12 +23,12 @@ public class Usuario{
 		this.age=age;
 	}
 	
-    public Integer getUsuarioId() {
-        return this.usuarioId;
+    public String getUsuarioId() {
+        return this.id;
     }
 	
-    public void setUsuarioId(Integer usuarioId) {
-    	this.usuarioId = usuarioId;
+    public void setUsuarioId(String id) {
+    	this.id = id;
     }
     
     public String getEmail() {

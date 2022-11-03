@@ -2,12 +2,12 @@ package com.example.pisosweb;
 
 
 import com.example.pisosweb.repository.EjemploRepository;
+import com.example.pisosweb.repository.MensajeRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-import com.example.pisosweb.mensajes.*;
 
 @SpringBootApplication
 public class PisoswebApplication implements CommandLineRunner{

@@ -1,4 +1,4 @@
-package com.example.pisosweb.usuarios;
+package com.example.pisosweb.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -12,8 +12,17 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.example.pisosweb.document.Comentario;
+import com.example.pisosweb.document.Mensaje;
+import com.example.pisosweb.document.Usuario;
+import com.example.pisosweb.repository.ComentarioRepository;
+import com.example.pisosweb.repository.MensajeRepository;
+import com.example.pisosweb.repository.UsuarioRepository;
+
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -23,6 +32,10 @@ public class UsuarioController {
 
 	@Autowired
     private UsuarioRepository userRepository;
+    @Autowired
+    private MensajeRepository mensajeRepository;
+    @Autowired
+    private ComentarioRepository comentarioRepository;
     
 	
     @GetMapping("/{id}")
@@ -52,6 +65,54 @@ public class UsuarioController {
 	public Collection<Usuario> getAllUsersByLastname(
         @Parameter(description = "lastname", required = true) @RequestParam("lastname") final String lastname) {
 		return userRepository.findByLastname(lastname);
+	}
+
+    @GetMapping(value = "/chatsUsers", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(description = "List all persons that chat with a specific user", responses = {
+			@ApiResponse(content = @Content(array = @ArraySchema(schema = @Schema(implementation = Usuario.class))), responseCode = "200") })
+	public Collection<Usuario> getAllUsersChatting(
+        @Parameter(description = "usuarioId", required = true) @RequestParam("usuarioId") final String usuarioId) {
+        List<Mensaje> userMessages = new ArrayList<>();
+        userMessages.addAll(mensajeRepository.findBySender(usuarioId));
+        userMessages.addAll(mensajeRepository.findByReceiver(usuarioId));
+        List<String> userIds = new ArrayList<>();
+        List<Usuario> usersChatting = new ArrayList<>();
+        
+        for(Mensaje m : userMessages) {
+            String sender = m.getSender();
+            String receiver = m.getReceiver();
+            if(sender.equals(usuarioId) && !userIds.contains(receiver)) {
+                userIds.add(receiver);
+                usersChatting.add(userRepository.findById(receiver).get());
+            } else if (receiver.equals(usuarioId) && !userIds.contains(sender)){
+                userIds.add(sender);
+                usersChatting.add(userRepository.findById(sender).get());
+            }
+        }
+        
+        return usersChatting;
+
+	}
+
+    @GetMapping(value = "/commentUsersFlat", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(description = "List all users that have sent at least one comment for a specific flat", responses = {
+			@ApiResponse(content = @Content(array = @ArraySchema(schema = @Schema(implementation = Usuario.class))), responseCode = "200") })
+	public Collection<Usuario> getAllCommentsUsersByFlat(
+        @Parameter(description = "vivienda", required = true) @RequestParam("vivienda") final String vivienda) {
+        List<Usuario> commentUsers = new ArrayList<>();
+        List<String> commentUsersIds = new ArrayList<>();
+        List<Comentario> flatComments = comentarioRepository.findByVivienda(vivienda).get();
+
+        for(Comentario c : flatComments) {
+            String usuario = c.getUsuario();
+            if(!commentUsersIds.contains(usuario)) {
+                commentUsersIds.add(usuario);
+                commentUsers.add(this.findById(usuario).get());
+            }
+        }
+
+        return commentUsers;
+
 	}
 
     @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)

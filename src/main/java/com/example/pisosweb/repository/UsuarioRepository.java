@@ -1,6 +1,9 @@
-package com.example.pisosweb.usuarios;
+package com.example.pisosweb.repository;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
+
+import com.example.pisosweb.document.Usuario;
+
 import java.util.List;
 import java.util.Optional;
 
