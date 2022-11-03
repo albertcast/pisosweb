@@ -12,7 +12,7 @@ import java.io.Serializable;
 @Setter
 @Getter
 @ToString
-@Document(collection = "comentarios")
+@Document(collection = "comments")
 public class Comment implements Serializable {
     @Id
     @NonNull

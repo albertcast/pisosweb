@@ -35,7 +35,7 @@ public class CommentController {
         }
     }
 
-    @GetMapping("/vivienda/{id}")
+    @GetMapping("/apartment/{id}")
     private ResponseEntity<List<Comment>> findByApartment(@PathVariable final String id){
         try{
             return new ResponseEntity<>(commentRepository.findByApartment(id).get(), HttpStatus.OK);
@@ -44,7 +44,7 @@ public class CommentController {
         }
     }
 
-    @GetMapping("/usuario/{id}")
+    @GetMapping("/user/{id}")
     private ResponseEntity<List<Comment>> findByUser(@PathVariable final String id){
         try{
             return new ResponseEntity<>(commentRepository.findByUser(id).get(), HttpStatus.OK);
@@ -66,7 +66,7 @@ public class CommentController {
         }
     }
 
-    @DeleteMapping("/borrar/{id}")
+    @DeleteMapping("/delete/{id}")
     private ResponseEntity<Comment> deleteComment(@PathVariable final String id){
         try{
             commentRepository.deleteById(id);
