@@ -31,7 +31,7 @@ import com.example.pisosweb.document.Message;
 import com.example.pisosweb.repository.MessageRepository;
 
 @RestController
-@RequestMapping("/api/messages")
+@RequestMapping("/api/message")
 public class MessageController {
     
     @Autowired
