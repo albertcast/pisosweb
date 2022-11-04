@@ -65,11 +65,12 @@ public class CommentController {
         }
     }
 
-    @PostMapping("/addComment")
+
+    @PostMapping(value = "/addComment")
     private ResponseEntity<Comment> addComment(@Parameter(description = "user", required = true) @RequestParam("user") final String user,
-                                                @Parameter(description = "apartment", required = true) @RequestParam("apartment") final String apartment,
+                                              @Parameter(description = "apartment", required = true) @RequestParam("apartment") final String apartment,
                                                 @Parameter(description = "text", required = true) @RequestParam("text") final String text,
-                                               @Parameter(description = "rating", required = true) @RequestParam("rating") final String rating){
+                                                 @Parameter(description = "rating", required = true) @RequestParam("rating") final String rating){
         try{
             Apartment ap = apartmentRepository.findById(apartment).get();
             User usr = userRepository.findById(user).get();
@@ -77,6 +78,7 @@ public class CommentController {
 
             if(ap == null || usr == null) { throw new Exception();}
             comment = new Comment(text,rating,usr,ap);
+            commentRepository.insert(comment);
             return new ResponseEntity<>(comment, HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -84,7 +86,7 @@ public class CommentController {
     }
 
     @PutMapping(value = "/updateComment")
-    public ResponseEntity<Comment> updateUser(
+    public ResponseEntity<Comment> updateComment(
             @Parameter(description = "id", required = true) @RequestParam("id") final String id,
             @Parameter(description = "user", required = true) @RequestParam("user") final String user,
             @Parameter(description = "apartment", required = true) @RequestParam("apartment") final String apartment,
