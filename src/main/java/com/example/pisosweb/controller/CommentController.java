@@ -13,9 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/comment")
@@ -65,12 +63,12 @@ public class CommentController {
         }
     }
 
-
-    @PostMapping(value = "/addComment")
-    private ResponseEntity<Comment> addComment(@Parameter(description = "user", required = true) @RequestParam("user") final String user,
-                                              @Parameter(description = "apartment", required = true) @RequestParam("apartment") final String apartment,
-                                                @Parameter(description = "text", required = true) @RequestParam("text") final String text,
-                                                 @Parameter(description = "rating", required = true) @RequestParam("rating") final String rating){
+    @PostMapping( "/addComment")
+    private ResponseEntity<Comment> addComment(
+            @Parameter(description = "user", required = true) @RequestParam("user") final String user,
+            @Parameter(description = "apartment", required = true) @RequestParam("apartment") final String apartment,
+            @Parameter(description = "text", required = true) @RequestParam("text") final String text,
+            @Parameter(description = "rating", required = true) @RequestParam("rating") final String rating){
         try{
             Apartment ap = apartmentRepository.findById(apartment).get();
             User usr = userRepository.findById(user).get();
@@ -81,11 +79,11 @@ public class CommentController {
             commentRepository.insert(comment);
             return new ResponseEntity<>(comment, HttpStatus.OK);
         }catch (Exception e){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
         }
     }
 
-    @PutMapping(value = "/updateComment")
+    @PutMapping( "/updateComment")
     public ResponseEntity<Comment> updateComment(
             @Parameter(description = "id", required = true) @RequestParam("id") final String id,
             @Parameter(description = "user", required = true) @RequestParam("user") final String user,
@@ -105,6 +103,7 @@ public class CommentController {
             return ResponseEntity.notFound().build();
         }
     }
+
 
     @DeleteMapping("/delete/{id}")
     private void deleteComment(@PathVariable final String id){
