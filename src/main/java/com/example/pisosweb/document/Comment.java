@@ -15,26 +15,17 @@ import java.io.Serializable;
 @Document(collection = "comments")
 public class Comment implements Serializable {
     @Id
-    @NonNull
     private String id;
-
-    @NonNull
     private String text;
-
-    @NonNull
     private String rating;
-
-    @NonNull
     private String apartment;
-
-    @NonNull
     private String user;
 
-	public Comment(String text, String rating, User usr, Apartment ap) {
+	public Comment(String text, String rating, String user, String apartment) {
 		this.text = text;
 		this.rating = rating;
-		user = usr.getUsuarioId();
-		apartment = ap.getId();
+		this.user = user;
+		this.apartment = apartment;
 	}
 
 	public String getId() {

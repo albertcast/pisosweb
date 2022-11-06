@@ -28,12 +28,9 @@ public class CommentController {
     private UserRepository userRepository;
 
     @GetMapping("/")
-    private ResponseEntity<List<Comment>> findAll(){
-        try{
-            return new ResponseEntity<>(commentRepository.findAll(), HttpStatus.OK);
-        }catch (Exception e){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    private List<Comment> findAll(){
+    	return commentRepository.findAll();
+        
     }
 
     @GetMapping("/{id}")
@@ -70,8 +67,8 @@ public class CommentController {
             @Parameter(description = "text", required = true) @RequestParam("text") final String text,
             @Parameter(description = "rating", required = true) @RequestParam("rating") final String rating){
         try{
-            Apartment ap = apartmentRepository.findById(apartment).get();
-            User usr = userRepository.findById(user).get();
+            String ap = apartmentRepository.findById(apartment).get().getId();
+            String usr = userRepository.findById(user).get().getUsuarioId();
             Comment comment;
 
             if(ap == null || usr == null) { throw new Exception();}
