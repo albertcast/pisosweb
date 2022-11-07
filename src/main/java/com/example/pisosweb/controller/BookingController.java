@@ -43,6 +43,7 @@ import com.example.pisosweb.repository.BookingRepository;
 
 
 
+@CrossOrigin(origins = "http://localhost:8080")
 @RestController
 @RequestMapping("/api/booking")
 public class BookingController {

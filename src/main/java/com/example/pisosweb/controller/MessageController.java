@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.pisosweb.document.Message;
 import com.example.pisosweb.repository.MessageRepository;
 
+@CrossOrigin(origins = "http://localhost:8080")
 @RestController
 @RequestMapping("/api/messages")
 public class MessageController {
