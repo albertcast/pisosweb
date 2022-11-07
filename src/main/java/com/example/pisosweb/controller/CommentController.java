@@ -13,9 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @CrossOrigin(origins = "http://localhost:8080")
 @RestController
@@ -31,12 +29,9 @@ public class CommentController {
     private UserRepository userRepository;
 
     @GetMapping("/")
-    private ResponseEntity<List<Comment>> findAll(){
-        try{
-            return new ResponseEntity<>(commentRepository.findAll(), HttpStatus.OK);
-        }catch (Exception e){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    private List<Comment> findAll(){
+    	return commentRepository.findAll();
+        
     }
 
     @GetMapping("/{id}")
@@ -66,26 +61,28 @@ public class CommentController {
         }
     }
 
-    @PostMapping("/addComment")
-    private ResponseEntity<Comment> addComment(@Parameter(description = "user", required = true) @RequestParam("user") final String user,
-                                                @Parameter(description = "apartment", required = true) @RequestParam("apartment") final String apartment,
-                                                @Parameter(description = "text", required = true) @RequestParam("text") final String text,
-                                               @Parameter(description = "rating", required = true) @RequestParam("rating") final String rating){
+    @PostMapping( "/addComment")
+    private ResponseEntity<Comment> addComment(
+            @Parameter(description = "user", required = true) @RequestParam("user") final String user,
+            @Parameter(description = "apartment", required = true) @RequestParam("apartment") final String apartment,
+            @Parameter(description = "text", required = true) @RequestParam("text") final String text,
+            @Parameter(description = "rating", required = true) @RequestParam("rating") final String rating){
         try{
-            Apartment ap = apartmentRepository.findById(apartment).get();
-            User usr = userRepository.findById(user).get();
+            String ap = apartmentRepository.findById(apartment).get().getId();
+            String usr = userRepository.findById(user).get().getUsuarioId();
             Comment comment;
 
             if(ap == null || usr == null) { throw new Exception();}
             comment = new Comment(text,rating,usr,ap);
+            commentRepository.insert(comment);
             return new ResponseEntity<>(comment, HttpStatus.OK);
         }catch (Exception e){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
         }
     }
 
-    @PutMapping(value = "/updateComment")
-    public ResponseEntity<Comment> updateUser(
+    @PutMapping( "/updateComment")
+    public ResponseEntity<Comment> updateComment(
             @Parameter(description = "id", required = true) @RequestParam("id") final String id,
             @Parameter(description = "user", required = true) @RequestParam("user") final String user,
             @Parameter(description = "apartment", required = true) @RequestParam("apartment") final String apartment,
@@ -104,6 +101,7 @@ public class CommentController {
             return ResponseEntity.notFound().build();
         }
     }
+
 
     @DeleteMapping("/delete/{id}")
     private void deleteComment(@PathVariable final String id){

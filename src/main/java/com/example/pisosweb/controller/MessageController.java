@@ -32,7 +32,7 @@ import com.example.pisosweb.repository.MessageRepository;
 
 @CrossOrigin(origins = "http://localhost:8080")
 @RestController
-@RequestMapping("/api/messages")
+@RequestMapping("/api/message")
 public class MessageController {
     
     @Autowired
@@ -43,14 +43,14 @@ public class MessageController {
         return repository.findById(id);
     }
 
-    @GetMapping(value = "/sender/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/sender/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(description = "List all messages by one sender", responses = {
 			@ApiResponse(content = @Content(array = @ArraySchema(schema = @Schema(implementation = Message.class))), responseCode = "200") })
 	public Collection<Message> getAllSenderMessages(@PathVariable String userId) {
 		return repository.findBySender(userId);
 	}
 
-    @GetMapping(value = "/receiver/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/receiver/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(description = "List all messages by one sender", responses = {
 			@ApiResponse(content = @Content(array = @ArraySchema(schema = @Schema(implementation = Message.class))), responseCode = "200") })
 	public Collection<Message> getAllReceiverMessages(@PathVariable String userId) {
@@ -90,7 +90,7 @@ public class MessageController {
 		return repository.findAll();
 	}
 
-    @PostMapping(value = "/")
+    @PostMapping(value = "")
     public ResponseEntity<Message> addMensaje(
             @Parameter(description = "sender", required = true) @RequestParam("sender") final String sender,
             @Parameter(description = "receiver", required = true) @RequestParam("receiver") final String receiver,
@@ -101,7 +101,7 @@ public class MessageController {
     
     }
 
-    @PutMapping(value = "/")
+    @PutMapping(value = "")
     public ResponseEntity<Message> updateMessage(
         @Parameter(description = "id", required = true) @RequestParam("id") final String id,
         @Parameter(description = "content", required = true) @RequestParam("content") final String content) {
