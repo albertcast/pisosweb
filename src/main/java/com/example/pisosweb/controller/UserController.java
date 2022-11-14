@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Optional;
 
 
-@CrossOrigin
+@CrossOrigin(origins = {"http://localhost:8080","https://pisoswebcliente.herokuapp.com"})
 @RestController
 @RequestMapping("/api/user")
 public class UserController {

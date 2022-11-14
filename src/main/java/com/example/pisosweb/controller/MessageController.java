@@ -25,7 +25,7 @@ import org.springframework.http.ResponseEntity;
 import com.example.pisosweb.document.Message;
 import com.example.pisosweb.repository.MessageRepository;
 
-@CrossOrigin
+@CrossOrigin(origins = {"http://localhost:8080","https://pisoswebcliente.herokuapp.com"})
 @RestController
 @RequestMapping("/api/message")
 public class MessageController {
