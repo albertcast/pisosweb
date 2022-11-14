@@ -116,7 +116,7 @@ public class UserController {
 
 	}
 
-    @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(description = "List all users", responses = {
 			@ApiResponse(content = @Content(array = @ArraySchema(schema = @Schema(implementation = User.class))), responseCode = "200") })
 	public Collection<User> getAll() {
