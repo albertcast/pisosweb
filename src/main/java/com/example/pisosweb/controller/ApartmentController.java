@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.pisosweb.document.Apartment;
 import com.example.pisosweb.repository.ApartmentRepository;
 
-@CrossOrigin(origins = {"http://localhost:8080","https://pisoswebcliente.herokuapp.com"})
+@CrossOrigin
 @RestController
 @RequestMapping("/api/apartment")
 public class ApartmentController {

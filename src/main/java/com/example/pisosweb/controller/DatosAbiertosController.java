@@ -31,7 +31,7 @@ import org.json.*;
 //https://dipcas.opendatasoft.com/api/v2/catalog/datasets/directorio-de-bibliotecas-valencianas0/exports/json
 //https://www.zaragoza.es/contenidos/bici/carriles_WGS84.json
 
-@CrossOrigin(origins = {"http://localhost:8080","https://pisoswebcliente.herokuapp.com"})
+@CrossOrigin
 @RestController
 @RequestMapping("/api/ejemplo")
 public class DatosAbiertosController {
