@@ -33,7 +33,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.pisosweb.document.Apartment;
+import com.example.pisosweb.document.User;
 import com.example.pisosweb.repository.ApartmentRepository;
+import com.example.pisosweb.repository.UserRepository;
 
 @CrossOrigin(origins = {"http://localhost:8080","https://pisoswebcliente.herokuapp.com"})
 @RestController
@@ -42,6 +44,8 @@ public class ApartmentController {
     
     @Autowired
     private ApartmentRepository repository;
+    @Autowired
+    private UserRepository userRepository;
     String pattern = "MM-dd-yyyy";
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 
@@ -72,17 +76,26 @@ public class ApartmentController {
 	public Collection<Apartment> getAllFlats() {
 		return repository.findAll();
 	}
+    
+    @GetMapping(value = "/owner", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(description = "List all flats by owner", responses = {
+			@ApiResponse(content = @Content(array = @ArraySchema(schema = @Schema(implementation = Apartment.class))), responseCode = "200") })
+	public Collection<Apartment> getAllFlatsByOwner(
+        @Parameter(description = "owner", required = true) @RequestParam("owner") final String owner) {
+		return repository.findByOwner(owner);
+	}
 
     @PostMapping(value = "/addFlat")
     public ResponseEntity<Apartment> addFlat(
             @Parameter(description = "title", required = true) @RequestParam("title") final String title,
             @Parameter(description = "place", required = true) @RequestParam("place") final String place,
             @Parameter(description = "description", required = true) @RequestParam("description") final String description,
-            @Parameter(description = "date", required = true) @RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") final Date date) throws ParseException {
+            @Parameter(description = "date", required = true) @RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") final Date date,
+            @Parameter(description = "owner", required = true) @RequestParam("owner") final String owner) throws ParseException {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         calendar.add(Calendar.HOUR_OF_DAY, 1);
-        Apartment apartment = repository.insert(new Apartment(title, place, description, calendar.getTime()));
+        Apartment apartment = repository.insert(new Apartment(title, place, description, calendar.getTime(), owner));
         return ResponseEntity.ok(apartment);
     }
 
@@ -92,9 +105,10 @@ public class ApartmentController {
         @Parameter(description = "title", required = false) @RequestParam("title") final String title,
         @Parameter(description = "place", required = false) @RequestParam("place") final String place,
         @Parameter(description = "description", required = false) @RequestParam("description") final String description,
-        @Parameter(description = "date", required = false) @RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") final Date date) throws ParseException  {
+        @Parameter(description = "date", required = false) @RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") final Date date,
+        @Parameter(description = "owner", required = true) @RequestParam("owner") final String owner) throws ParseException  {
             Optional<Apartment> apartmentOpt = repository.findById(id);
-            if(!apartmentOpt.isEmpty()) {
+            if(!apartmentOpt.isEmpty() && !userRepository.findById(owner).isEmpty()) {
                 Apartment apartment = apartmentOpt.get();
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(date);
@@ -103,6 +117,7 @@ public class ApartmentController {
                 apartment.setTitle(title);
                 apartment.setPlace(place);
                 apartment.setDescription(description);
+                apartment.setOwner(owner);
                 apartment = repository.save(apartment);
                 return ResponseEntity.ok(apartment);
             } else {

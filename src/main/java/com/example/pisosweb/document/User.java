@@ -1,5 +1,8 @@
 package com.example.pisosweb.document;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import nonapi.io.github.classgraph.json.Id;
 
 
@@ -62,4 +65,8 @@ public class User{
     public void setEdad(Integer age) {
         this.age = age;
     }
+
+	
+    
+    
 }
