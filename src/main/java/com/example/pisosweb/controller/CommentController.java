@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.text.ParseException;
 import java.util.*;
 
+@CrossOrigin(origins = {"http://localhost:8080","https://pisoswebcliente.herokuapp.com"})
 @RestController
 @RequestMapping("/api/comment")
 public class CommentController {

@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,6 +31,7 @@ import org.json.*;
 //https://dipcas.opendatasoft.com/api/v2/catalog/datasets/directorio-de-bibliotecas-valencianas0/exports/json
 //https://www.zaragoza.es/contenidos/bici/carriles_WGS84.json
 
+@CrossOrigin(origins = {"http://localhost:8080","https://pisoswebcliente.herokuapp.com"})
 @RestController
 @RequestMapping("/api/ejemplo")
 public class DatosAbiertosController {
