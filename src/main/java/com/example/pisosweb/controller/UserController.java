@@ -42,10 +42,7 @@ public class UserController {
     @Autowired
     private CommentRepository comentarioRepository;
     
-    @GetMapping("/authentication")
-    public Map<String, Object> user(@AuthenticationPrincipal OAuth2User principal) {
-        return Collections.singletonMap("name", principal.getAttribute("name"));
-    }
+   
 	
     @GetMapping("/{id}")
     public Optional<User> findById(@PathVariable String id) {
