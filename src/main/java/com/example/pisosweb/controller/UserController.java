@@ -10,6 +10,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.pisosweb.document.Comment;
@@ -22,7 +24,9 @@ import com.example.pisosweb.repository.UserRepository;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -38,6 +42,10 @@ public class UserController {
     @Autowired
     private CommentRepository comentarioRepository;
     
+    @GetMapping("/authentication")
+    public Map<String, Object> user(@AuthenticationPrincipal OAuth2User principal) {
+        return Collections.singletonMap("name", principal.getAttribute("name"));
+    }
 	
     @GetMapping("/{id}")
     public Optional<User> findById(@PathVariable String id) {
