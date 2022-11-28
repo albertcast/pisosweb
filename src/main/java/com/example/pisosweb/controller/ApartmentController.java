@@ -107,10 +107,9 @@ public class ApartmentController {
         @Parameter(description = "place", required = false) @RequestParam("place") final String place,
         @Parameter(description = "description", required = false) @RequestParam("description") final String description,
         @Parameter(description = "date", required = false) @RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") final Date date,
-        @Parameter(description = "owner", required = true) @RequestParam("owner") final String owner,
         @Parameter(description = "capacity", required = true) @RequestParam("capacity") final int capacity) throws ParseException  {
             Optional<Apartment> apartmentOpt = repository.findById(id);
-            if(!apartmentOpt.isEmpty() && !userRepository.findById(owner).isEmpty()) {
+            if(!apartmentOpt.isEmpty()) {
                 Apartment apartment = apartmentOpt.get();
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(date);
@@ -119,7 +118,6 @@ public class ApartmentController {
                 apartment.setTitle(title);
                 apartment.setPlace(place);
                 apartment.setDescription(description);
-                apartment.setOwner(owner);
                 apartment.setCapacity(capacity);
                 apartment = repository.save(apartment);
                 return ResponseEntity.ok(apartment);
