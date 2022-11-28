@@ -92,11 +92,11 @@ public class ApartmentController {
             @Parameter(description = "description", required = true) @RequestParam("description") final String description,
             @Parameter(description = "date", required = true) @RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") final Date date,
             @Parameter(description = "owner", required = true) @RequestParam("owner") final String owner,
-            @Parameter(description = "capacidad", required = true) @RequestParam("capacidad") final int capacidad) throws ParseException {
+            @Parameter(description = "capacity", required = true) @RequestParam("capacity") final int capacity) throws ParseException {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         calendar.add(Calendar.HOUR_OF_DAY, 1);
-        Apartment apartment = repository.insert(new Apartment(title, place, description, calendar.getTime(), owner, capacidad));
+        Apartment apartment = repository.insert(new Apartment(title, place, description, calendar.getTime(), owner, capacity));
         return ResponseEntity.ok(apartment);
     }
 
@@ -108,7 +108,7 @@ public class ApartmentController {
         @Parameter(description = "description", required = false) @RequestParam("description") final String description,
         @Parameter(description = "date", required = false) @RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") final Date date,
         @Parameter(description = "owner", required = true) @RequestParam("owner") final String owner,
-        @Parameter(description = "capacidad", required = true) @RequestParam("capacidad") final int capacidad) throws ParseException  {
+        @Parameter(description = "capacidad", required = true) @RequestParam("capacidad") final int capacity) throws ParseException  {
             Optional<Apartment> apartmentOpt = repository.findById(id);
             if(!apartmentOpt.isEmpty() && !userRepository.findById(owner).isEmpty()) {
                 Apartment apartment = apartmentOpt.get();
@@ -120,7 +120,7 @@ public class ApartmentController {
                 apartment.setPlace(place);
                 apartment.setDescription(description);
                 apartment.setOwner(owner);
-                apartment.setCapacidad(capacidad);
+                apartment.setCapacity(capacity);
                 apartment = repository.save(apartment);
                 return ResponseEntity.ok(apartment);
             } else {
