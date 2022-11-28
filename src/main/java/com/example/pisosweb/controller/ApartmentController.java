@@ -100,9 +100,9 @@ public class ApartmentController {
         return ResponseEntity.ok(apartment);
     }
 
-    @PutMapping(value = "/updateFlat")
+    @PutMapping(value = "/updateFlat/{id}")
     public ResponseEntity<Apartment> updateFlat(
-        @Parameter(description = "id", required = true) @RequestParam("id") final String id,
+        @PathVariable String id,
         @Parameter(description = "title", required = false) @RequestParam("title") final String title,
         @Parameter(description = "place", required = false) @RequestParam("place") final String place,
         @Parameter(description = "description", required = false) @RequestParam("description") final String description,
