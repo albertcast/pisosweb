@@ -12,15 +12,17 @@ public class Apartment {
     private String description;
     private Date date;
     private String owner;
+    private int capacidad;
 
     public Apartment() {}
 
-    public Apartment(String title, String place, String description, Date date, String owner) {
+    public Apartment(String title, String place, String description, Date date, String owner, int capacidad) {
         this.title = title;
         this.place = place;
         this.description = description;
         this.date = date;
         this.owner = owner;
+        this.capacidad = capacidad;
     }
 
 
@@ -71,6 +73,16 @@ public class Apartment {
 	public void setOwner(String owner) {
 		this.owner = owner;
 	}
+
+	public int getCapacidad() {
+		return capacidad;
+	}
+
+	public void setCapacidad(int capacidad) {
+		this.capacidad = capacidad;
+	}
+	
+	
 
 
 }

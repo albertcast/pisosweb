@@ -14,16 +14,18 @@ public class User{
 	private String name;
 	private String lastname;
 	private Integer age;
+	private String accountAuthentication;
 	
 	public User() {
 	}
 	
-	public User(String email, String name, String lastname, Integer age) {
+	public User(String email, String name, String lastname, Integer age, String accountAuthentication) {
 		
 		this.email=email;
 		this.name=name;
 		this.lastname=lastname;
 		this.age=age;
+		this.accountAuthentication = accountAuthentication;
 	}
 	
     public String getUsuarioId() {
@@ -65,6 +67,14 @@ public class User{
     public void setEdad(Integer age) {
         this.age = age;
     }
+
+	public String getAccountAuthentication() {
+		return accountAuthentication;
+	}
+
+	public void setAccountAuthentication(String accountAuthentication) {
+		this.accountAuthentication = accountAuthentication;
+	}
 
 	
     

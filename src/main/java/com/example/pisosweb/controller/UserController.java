@@ -47,6 +47,11 @@ public class UserController {
     public Optional<User> findById(@PathVariable String id) {
         return userRepository.findById(id);
     }
+    
+    @GetMapping(value = "/accountAuthentication", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Optional<User> findByAccountAuthentication(@RequestParam("accountAuthentication") String accountAuthentication) {
+        return userRepository.findByAccountAuthentication(accountAuthentication);
+    }
 
     @GetMapping(value = "/email", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(description = "List all users by email", responses = {
@@ -133,9 +138,15 @@ public class UserController {
     		@Parameter(description = "email", required = true) @RequestParam("email") final String email,
             @Parameter(description = "name", required = true) @RequestParam("name") final String name,
             @Parameter(description = "lastname", required = true) @RequestParam("lastname") final String lastname,
-            @Parameter(description = "age", required = true) @RequestParam("age") final Integer age) throws ParseException {
-        User user = userRepository.insert(new User(email, name, lastname, age));
-        return ResponseEntity.ok(user);
+            @Parameter(description = "age", required = true) @RequestParam("age") final Integer age,
+            @Parameter(description = "accountAuthentication", required = true) @RequestParam("accountAuthentication") final String accountAuthentication) throws ParseException {
+    	if(findByAccountAuthentication(accountAuthentication)== null) {
+	        User user = userRepository.insert(new User(email, name, lastname, age, accountAuthentication));
+	        return ResponseEntity.ok(user);
+    	} else {
+    		return null;
+    	}
+    	
     }
     
     
