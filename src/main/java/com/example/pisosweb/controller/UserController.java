@@ -135,10 +135,10 @@ public class UserController {
     
     @PostMapping(value = "/addUser")
     public ResponseEntity<User> addUser(
-    		@Parameter(description = "email", required = true) @RequestParam("email") final String email,
-            @Parameter(description = "name", required = true) @RequestParam("name") final String name,
-            @Parameter(description = "lastname", required = true) @RequestParam("lastname") final String lastname,
-            @Parameter(description = "age", required = true) @RequestParam("age") final Integer age,
+    		@Parameter(description = "email") @RequestParam("email") final String email,
+            @Parameter(description = "name") @RequestParam("name") final String name,
+            @Parameter(description = "lastname") @RequestParam("lastname") final String lastname,
+            @Parameter(description = "age") @RequestParam("age") final Integer age,
             @Parameter(description = "accountAuthentication", required = true) @RequestParam("accountAuthentication") final String accountAuthentication) throws ParseException {
     	if(findByAccountAuthentication(accountAuthentication).isEmpty()) {
 	        User user = userRepository.insert(new User(email, name, lastname, age, accountAuthentication));
