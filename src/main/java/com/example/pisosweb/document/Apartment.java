@@ -73,7 +73,7 @@ public class Apartment {
 	public void setOwner(String owner) {
 		this.owner = owner;
 	}
-
+	
 	public int getCapacity() {
 		return capacity;
 	}

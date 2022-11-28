@@ -108,7 +108,7 @@ public class ApartmentController {
         @Parameter(description = "description", required = false) @RequestParam("description") final String description,
         @Parameter(description = "date", required = false) @RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") final Date date,
         @Parameter(description = "owner", required = true) @RequestParam("owner") final String owner,
-        @Parameter(description = "capacidad", required = true) @RequestParam("capacidad") final int capacity) throws ParseException  {
+        @Parameter(description = "capacity", required = true) @RequestParam("capacity") final int capacity) throws ParseException  {
             Optional<Apartment> apartmentOpt = repository.findById(id);
             if(!apartmentOpt.isEmpty() && !userRepository.findById(owner).isEmpty()) {
                 Apartment apartment = apartmentOpt.get();
