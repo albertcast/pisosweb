@@ -140,7 +140,7 @@ public class UserController {
             @Parameter(description = "lastname", required = true) @RequestParam("lastname") final String lastname,
             @Parameter(description = "age", required = true) @RequestParam("age") final Integer age,
             @Parameter(description = "accountAuthentication", required = true) @RequestParam("accountAuthentication") final String accountAuthentication) throws ParseException {
-    	if(findByAccountAuthentication(accountAuthentication)== null) {
+    	if(findByAccountAuthentication(accountAuthentication).isEmpty()) {
 	        User user = userRepository.insert(new User(email, name, lastname, age, accountAuthentication));
 	        return ResponseEntity.ok(user);
     	} else {
