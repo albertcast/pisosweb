@@ -12,21 +12,31 @@ public class Apartment {
     private String description;
     private Date date;
     private String owner;
+    private int price;
     private int capacity;
 
     public Apartment() {}
 
-    public Apartment(String title, String place, String description, Date date, String owner, int capacity) {
+    public Apartment(String title, String place, String description, Date date, String owner, int capacity, int price) {
         this.title = title;
         this.place = place;
         this.description = description;
         this.date = date;
         this.owner = owner;
         this.capacity = capacity;
+        this.price = price;
     }
 
 
-    public String getId() {
+    public int getPrice() {
+		return price;
+	}
+
+	public void setPrice(int price) {
+		this.price = price;
+	}
+
+	public String getId() {
         return this.id;
     }
 

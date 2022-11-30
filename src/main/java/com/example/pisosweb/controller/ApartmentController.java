@@ -84,6 +84,20 @@ public class ApartmentController {
         @Parameter(description = "owner", required = true) @RequestParam("owner") final String owner) {
 		return repository.findByOwner(owner);
 	}
+    @GetMapping(value = "/price", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(description = "List all flats <= price", responses = {
+			@ApiResponse(content = @Content(array = @ArraySchema(schema = @Schema(implementation = Apartment.class))), responseCode = "200") })
+	public Collection<Apartment> getAllFlatsByPrice(
+        @Parameter(description = "price", required = true) @RequestParam("price") final int price) {
+    	List<Apartment> lista = repository.findByPrice(price);
+    	List<Apartment> lista2 = new ArrayList<Apartment>();
+    	for(Apartment a: lista) {
+    		if(a.getPrice()<=price) {
+    			lista2.add(a);
+    		}
+    	}
+    	return lista2;
+	}
 
     @PostMapping(value = "/addFlat")
     public ResponseEntity<Apartment> addFlat(
@@ -92,11 +106,12 @@ public class ApartmentController {
             @Parameter(description = "description", required = true) @RequestParam("description") final String description,
             @Parameter(description = "date", required = true) @RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") final Date date,
             @Parameter(description = "owner", required = true) @RequestParam("owner") final String owner,
-            @Parameter(description = "capacity", required = true) @RequestParam("capacity") final int capacity) throws ParseException {
+            @Parameter(description = "capacity", required = true) @RequestParam("capacity") final int capacity,
+            @Parameter(description = "price", required = true) @RequestParam("price") final int price) throws ParseException {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         calendar.add(Calendar.HOUR_OF_DAY, 1);
-        Apartment apartment = repository.insert(new Apartment(title, place, description, calendar.getTime(), owner, capacity));
+        Apartment apartment = repository.insert(new Apartment(title, place, description, calendar.getTime(), owner, capacity,price));
         return ResponseEntity.ok(apartment);
     }
 
@@ -107,7 +122,8 @@ public class ApartmentController {
         @Parameter(description = "place", required = false) @RequestParam("place") final String place,
         @Parameter(description = "description", required = false) @RequestParam("description") final String description,
         @Parameter(description = "date", required = false) @RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") final Date date,
-        @Parameter(description = "capacity", required = true) @RequestParam("capacity") final int capacity) throws ParseException  {
+        @Parameter(description = "capacity", required = true) @RequestParam("capacity") final int capacity,
+        @Parameter(description = "price", required = true) @RequestParam("price") final int price) throws ParseException  {
             Optional<Apartment> apartmentOpt = repository.findById(id);
             if(!apartmentOpt.isEmpty()) {
                 Apartment apartment = apartmentOpt.get();
@@ -119,6 +135,7 @@ public class ApartmentController {
                 apartment.setPlace(place);
                 apartment.setDescription(description);
                 apartment.setCapacity(capacity);
+                apartment.setPrice(price);
                 apartment = repository.save(apartment);
                 return ResponseEntity.ok(apartment);
             } else {

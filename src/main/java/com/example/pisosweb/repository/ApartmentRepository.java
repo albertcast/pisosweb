@@ -14,5 +14,6 @@ public interface ApartmentRepository extends MongoRepository<Apartment, String> 
     public List<Apartment> findByPlace(String place);
     public List<Apartment> findByDate(Date date);
     public List<Apartment> findByOwner(String owner);
+    public List<Apartment> findByPrice(int price);
 
 }
