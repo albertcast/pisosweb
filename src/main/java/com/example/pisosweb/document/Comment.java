@@ -6,6 +6,7 @@ import nonapi.io.github.classgraph.json.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,12 +21,22 @@ public class Comment implements Serializable {
     private String rating;
     private String apartment;
     private String user;
+    private LocalDate date;
 
-	public Comment(String text, String rating, String user, String apartment) {
+	public Comment(String text, String rating, String user, String apartment, LocalDate date) {
 		this.text = text;
 		this.rating = rating;
 		this.user = user;
 		this.apartment = apartment;
+		this.date = date;
+	}
+
+	public LocalDate getDate() {
+		return date;
+	}
+
+	public void setDate(LocalDate date) {
+		this.date = date;
 	}
 
 	public String getId() {

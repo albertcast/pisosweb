@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
+import java.time.LocalDate;
 import java.util.*;
 
 @CrossOrigin(origins = {"http://localhost:8080","https://pisoswebcliente.herokuapp.com"})
@@ -66,14 +67,15 @@ public class CommentController {
             @Parameter(description = "user", required = true) @RequestParam("user") final String user,
             @Parameter(description = "apartment", required = true) @RequestParam("apartment") final String apartment,
             @Parameter(description = "text", required = true) @RequestParam("text") final String text,
-            @Parameter(description = "rating", required = true) @RequestParam("rating") final String rating){
+            @Parameter(description = "rating", required = true) @RequestParam("rating") final String rating,
+            @Parameter(description = "date", required = true) @RequestParam("date") final LocalDate date){
         try{
             String ap = apartmentRepository.findById(apartment).get().getId();
             String usr = userRepository.findById(user).get().getUsuarioId();
             Comment comment;
 
             if(ap == null || usr == null) { throw new Exception();}
-            comment = new Comment(text,rating,usr,ap);
+            comment = new Comment(text,rating,usr,ap,date);
             commentRepository.insert(comment);
             return new ResponseEntity<>(comment, HttpStatus.OK);
         }catch (Exception e){
