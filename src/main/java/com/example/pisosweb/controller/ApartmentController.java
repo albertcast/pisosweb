@@ -44,8 +44,7 @@ public class ApartmentController {
     
     @Autowired
     private ApartmentRepository repository;
-    @Autowired
-    private UserRepository userRepository;
+
     String pattern = "MM-dd-yyyy";
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 
@@ -107,11 +106,12 @@ public class ApartmentController {
             @Parameter(description = "date", required = true) @RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") final Date date,
             @Parameter(description = "owner", required = true) @RequestParam("owner") final String owner,
             @Parameter(description = "capacity", required = true) @RequestParam("capacity") final int capacity,
-            @Parameter(description = "price", required = true) @RequestParam("price") final int price) throws ParseException {
+            @Parameter(description = "price", required = true) @RequestParam("price") final int price,
+            @Parameter(description = "image", required = true) @RequestParam("image") final String image) throws ParseException {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         calendar.add(Calendar.HOUR_OF_DAY, 1);
-        Apartment apartment = repository.insert(new Apartment(title, place, description, calendar.getTime(), owner, capacity,price));
+        Apartment apartment = repository.insert(new Apartment(title, place, description, calendar.getTime(), owner, capacity,price, image));
         return ResponseEntity.ok(apartment);
     }
 
@@ -123,7 +123,8 @@ public class ApartmentController {
         @Parameter(description = "description", required = false) @RequestParam("description") final String description,
         @Parameter(description = "date", required = false) @RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") final Date date,
         @Parameter(description = "capacity", required = true) @RequestParam("capacity") final int capacity,
-        @Parameter(description = "price", required = true) @RequestParam("price") final int price) throws ParseException  {
+        @Parameter(description = "price", required = true) @RequestParam("price") final int price,
+        @Parameter(description = "image", required = true) @RequestParam("image") final String image) throws ParseException  {
             Optional<Apartment> apartmentOpt = repository.findById(id);
             if(!apartmentOpt.isEmpty()) {
                 Apartment apartment = apartmentOpt.get();
@@ -136,6 +137,7 @@ public class ApartmentController {
                 apartment.setDescription(description);
                 apartment.setCapacity(capacity);
                 apartment.setPrice(price);
+                apartment.setImage(image);
                 apartment = repository.save(apartment);
                 return ResponseEntity.ok(apartment);
             } else {
