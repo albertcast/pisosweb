@@ -8,6 +8,7 @@ import com.example.pisosweb.repository.CommentRepository;
 import com.example.pisosweb.repository.UserRepository;
 import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -68,7 +69,7 @@ public class CommentController {
             @Parameter(description = "apartment", required = true) @RequestParam("apartment") final String apartment,
             @Parameter(description = "text", required = true) @RequestParam("text") final String text,
             @Parameter(description = "rating", required = true) @RequestParam("rating") final String rating,
-            @Parameter(description = "date", required = true) @RequestParam("date") final LocalDate date){
+            @Parameter(description = "date", required = true) @RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") final LocalDate date){
         try{
             String ap = apartmentRepository.findById(apartment).get().getId();
             String usr = userRepository.findById(user).get().getUsuarioId();
