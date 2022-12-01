@@ -68,7 +68,7 @@ public class CommentController {
             @Parameter(description = "user", required = true) @RequestParam("user") final String user,
             @Parameter(description = "apartment", required = true) @RequestParam("apartment") final String apartment,
             @Parameter(description = "text", required = true) @RequestParam("text") final String text,
-            @Parameter(description = "rating", required = true) @RequestParam("rating") final String rating,
+            @Parameter(description = "rating", required = true) @RequestParam("rating") final int rating,
             @Parameter(description = "date", required = true) @RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") final LocalDate date){
         try{
             String ap = apartmentRepository.findById(apartment).get().getId();
@@ -90,7 +90,7 @@ public class CommentController {
             @Parameter(description = "user", required = true) @RequestParam("user") final String user,
             @Parameter(description = "apartment", required = true) @RequestParam("apartment") final String apartment,
             @Parameter(description = "text", required = true) @RequestParam("text") final String text,
-            @Parameter(description = "rating", required = true) @RequestParam("rating") final String rating) throws ParseException {
+            @Parameter(description = "rating", required = true) @RequestParam("rating") final int rating) throws ParseException {
         Optional<Comment> commentOpt = commentRepository.findById(id);
         if(!commentOpt.isEmpty()) {
             Comment comment = commentOpt.get();

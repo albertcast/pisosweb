@@ -18,12 +18,12 @@ public class Comment implements Serializable {
     @Id
     private String id;
     private String text;
-    private String rating;
+    private int rating;
     private String apartment;
     private String user;
     private LocalDate date;
 
-	public Comment(String text, String rating, String user, String apartment, LocalDate date) {
+	public Comment(String text, int rating, String user, String apartment, LocalDate date) {
 		this.text = text;
 		this.rating = rating;
 		this.user = user;
@@ -55,11 +55,11 @@ public class Comment implements Serializable {
 		this.text = text;
 	}
 
-	public String getRating() {
+	public int getRating() {
 		return rating;
 	}
 
-	public void setRating(String rating) {
+	public void setRating(int rating) {
 		this.rating = rating;
 	}
 
