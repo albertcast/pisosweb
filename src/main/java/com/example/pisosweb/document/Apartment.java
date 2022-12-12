@@ -14,10 +14,11 @@ public class Apartment {
     private String owner;
     private int price;
     private int capacity;
+    private String image;
 
     public Apartment() {}
 
-    public Apartment(String title, String place, String description, Date date, String owner, int capacity, int price) {
+    public Apartment(String title, String place, String description, Date date, String owner, int capacity, int price, String image) {
         this.title = title;
         this.place = place;
         this.description = description;
@@ -25,10 +26,19 @@ public class Apartment {
         this.owner = owner;
         this.capacity = capacity;
         this.price = price;
+        this.image = image;
     }
 
 
-    public int getPrice() {
+    public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
+
+	public int getPrice() {
 		return price;
 	}
 

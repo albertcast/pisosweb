@@ -1,5 +1,6 @@
 package com.example.pisosweb.controller;
 
+import com.cloudinary.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
@@ -7,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import io.swagger.v3.oas.annotations.Operation;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -16,6 +18,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.TimeZone;
 
@@ -31,7 +34,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.example.pisosweb.document.Apartment;
 import com.example.pisosweb.document.User;
 import com.example.pisosweb.repository.ApartmentRepository;
@@ -41,7 +47,9 @@ import com.example.pisosweb.repository.UserRepository;
 @RestController
 @RequestMapping("/api/apartment")
 public class ApartmentController {
-    
+	private String cloud_name = "dazcrlzub";
+	private String cloud_ak = "589373914839945";
+	private String cloud_as = "HPtGK-hYaxWzREnHoELcHIucbdQ";
     @Autowired
     private ApartmentRepository repository;
     @Autowired
@@ -99,7 +107,7 @@ public class ApartmentController {
     	return lista2;
 	}
 
-    @PostMapping(value = "/addFlat")
+    @PostMapping(value = "/addFlat", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Apartment> addFlat(
             @Parameter(description = "title", required = true) @RequestParam("title") final String title,
             @Parameter(description = "place", required = true) @RequestParam("place") final String place,
@@ -107,11 +115,25 @@ public class ApartmentController {
             @Parameter(description = "date", required = true) @RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") final Date date,
             @Parameter(description = "owner", required = true) @RequestParam("owner") final String owner,
             @Parameter(description = "capacity", required = true) @RequestParam("capacity") final int capacity,
-            @Parameter(description = "price", required = true) @RequestParam("price") final int price) throws ParseException {
-        Calendar calendar = Calendar.getInstance();
+            @Parameter(description = "price", required = true) @RequestParam("price") final int price,
+			@Parameter(description = "Image", required = false) @RequestParam("image") MultipartFile image) throws ParseException, IOException {
+    	Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
+    			"cloud_name", cloud_name,
+    			"api_key", cloud_ak,
+    			"api_secret", cloud_as,
+    			"secure", true));
+    	
+    	Map params = ObjectUtils.asMap(
+    		    "public_id", image.getOriginalFilename(), 
+    		    "resource_type", "image"         
+    		);
+    	String imString = cloudinary.uploader().upload(image.getBytes(), params).get("url").toString();
+    	
+    	
+    	Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         calendar.add(Calendar.HOUR_OF_DAY, 1);
-        Apartment apartment = repository.insert(new Apartment(title, place, description, calendar.getTime(), owner, capacity,price));
+        Apartment apartment = repository.insert(new Apartment(title, place, description, calendar.getTime(), owner, capacity,price, imString));
         return ResponseEntity.ok(apartment);
     }
 
