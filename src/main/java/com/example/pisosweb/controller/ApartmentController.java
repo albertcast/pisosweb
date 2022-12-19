@@ -62,7 +62,7 @@ public class ApartmentController {
         return repository.findById(id);
     }
 
-    @GetMapping(value = "/place", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/apartmentsByPlace", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(description = "List all flats by place", responses = {
 			@ApiResponse(content = @Content(array = @ArraySchema(schema = @Schema(implementation = Apartment.class))), responseCode = "200") })
 	public Collection<Apartment> getAllFlatsByPlace(
@@ -70,7 +70,7 @@ public class ApartmentController {
 		return repository.findByPlace(place);
 	}
 
-    @GetMapping(value = "/date", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/apartmentsByDate", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(description = "List all flats by date", responses = {
 			@ApiResponse(content = @Content(array = @ArraySchema(schema = @Schema(implementation = Apartment.class))), responseCode = "200") })
 	public Collection<Apartment> getAllFlatsByDate(
@@ -85,14 +85,14 @@ public class ApartmentController {
 		return repository.findAll();
 	}
     
-    @GetMapping(value = "/owner", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/apartmentsByOwner", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(description = "List all flats by owner", responses = {
 			@ApiResponse(content = @Content(array = @ArraySchema(schema = @Schema(implementation = Apartment.class))), responseCode = "200") })
 	public Collection<Apartment> getAllFlatsByOwner(
         @Parameter(description = "owner", required = true) @RequestParam("owner") final String owner) {
 		return repository.findByOwner(owner);
 	}
-    @GetMapping(value = "/price", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/apartmentsByPrice", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(description = "List all flats <= price", responses = {
 			@ApiResponse(content = @Content(array = @ArraySchema(schema = @Schema(implementation = Apartment.class))), responseCode = "200") })
 	public Collection<Apartment> getAllFlatsByPrice(
@@ -107,7 +107,7 @@ public class ApartmentController {
     	return lista2;
 	}
 
-    @PostMapping(value = "/addFlat", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Apartment> addFlat(
             @Parameter(description = "title", required = true) @RequestParam("title") final String title,
             @Parameter(description = "place", required = true) @RequestParam("place") final String place,
@@ -137,7 +137,7 @@ public class ApartmentController {
         return ResponseEntity.ok(apartment);
     }
 
-    @PutMapping(value = "/updateFlat")
+    @PutMapping(value = "/")
     public ResponseEntity<Apartment> updateFlat(
         @Parameter(description = "id", required = true) @RequestParam("id") final String id,
         @Parameter(description = "title", required = false) @RequestParam("title") final String title,
@@ -166,8 +166,8 @@ public class ApartmentController {
         }
     
 
-    @DeleteMapping(value = "/{id}")
-    public void deleteFlat(@PathVariable("id") final String id) {
+    @DeleteMapping(value = "/")
+    public void deleteFlat(@RequestParam("id") final String id) {
         Apartment apartment = repository.findById(id).get();
         repository.delete(apartment);
     }

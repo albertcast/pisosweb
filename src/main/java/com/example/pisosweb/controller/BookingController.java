@@ -61,8 +61,8 @@ public class BookingController {
 	@Operation(description = "Find booking by guest", responses = {
 			@ApiResponse(content = @Content(schema = @Schema(implementation = Booking.class)), responseCode = "200"),
 			@ApiResponse(responseCode = "404", description = "Booking with such guest doesn't exists") })
-	@GetMapping(value = "/guest/{guest}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Booking> findByGuest(@PathVariable String guest) {
+	@GetMapping(value = "/bookingsByGuest", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Booking> findByGuest(@RequestParam String guest) {
         List<Booking> lista = repository.findByGuest(guest);
         lista.sort(new DateComparator().reversed());
         return lista;
@@ -71,8 +71,8 @@ public class BookingController {
 	@Operation(description = "Find booking by arrival date", responses = {
 			@ApiResponse(content = @Content(schema = @Schema(implementation = Booking.class)), responseCode = "200"),
 			@ApiResponse(responseCode = "404", description = "Booking with such arrival date doesn't exists") })
-	@GetMapping(value = "/arrivalDate/{arrivalDate}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Booking> findByArrivalDate(@Parameter(description = "date", required = true) @PathVariable("arrivalDate") @DateTimeFormat(pattern = "yyyy-MM-dd") final LocalDate arrivalDate) throws ParseException {
+	@GetMapping(value = "/bookingsByArrivalDate", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Booking> findByArrivalDate(@Parameter(description = "date", required = true) @RequestParam("arrivalDate") @DateTimeFormat(pattern = "yyyy-MM-dd") final LocalDate arrivalDate) throws ParseException {
         List<Booking> lista = repository.findByArrivalDate(arrivalDate);
         return lista;
     }
@@ -80,8 +80,8 @@ public class BookingController {
 	@Operation(description = "Find booking by departure date", responses = {
 			@ApiResponse(content = @Content(schema = @Schema(implementation = Booking.class)), responseCode = "200"),
 			@ApiResponse(responseCode = "404", description = "Booking with such departure date doesn't exists") })
-	@GetMapping(value = "/departureDate/{departureDate}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Booking> findByDepartureDate(@Parameter(description = "date", required = true) @PathVariable("departureDate") @DateTimeFormat(pattern = "yyyy-MM-dd") final LocalDate departureDate) throws ParseException {
+	@GetMapping(value = "/bookingsByDepartureDate", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Booking> findByDepartureDate(@Parameter(description = "date", required = true) @RequestParam("departureDate") @DateTimeFormat(pattern = "yyyy-MM-dd") final LocalDate departureDate) throws ParseException {
         List<Booking> lista = repository.findByDepartureDate(departureDate);
         return lista;
     }
@@ -89,8 +89,8 @@ public class BookingController {
 	@Operation(description = "Find booking by apartment", responses = {
 			@ApiResponse(content = @Content(schema = @Schema(implementation = Booking.class)), responseCode = "200"),
 			@ApiResponse(responseCode = "404", description = "Booking with such apartment doesn't exists") })
-	@GetMapping(value = "/apartment/{apartment}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Booking> findByApartment(@PathVariable String apartment) {
+	@GetMapping(value = "/bookingsByApartment", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Booking> findByApartment(@RequestParam String apartment) {
         List<Booking> lista = repository.findAll();
         List<Booking> lista2 = new ArrayList<Booking>();
         for(Booking b : lista) {
@@ -113,7 +113,7 @@ public class BookingController {
 		return repository.findAll();
 	}
 	
-	@PostMapping(value = "/addBooking")
+	@PostMapping(value = "/")
     public ResponseEntity<Booking> addBooking(
             @Parameter(description = "guest", required = true) @RequestParam("guest") final String guest,
             @Parameter(description = "arrivalDate", required = true) @RequestParam("arrivalDate") @DateTimeFormat(pattern = "yyyy-MM-dd") final LocalDate arrivalDate,
@@ -123,7 +123,7 @@ public class BookingController {
         return ResponseEntity.ok(booking);
     }
 	
-	@PutMapping(value = "/updateBooking")
+	@PutMapping(value = "/")
     public ResponseEntity<Booking> updateBooking(
     		@Parameter(description = "id", required = true) @RequestParam("id") final String id,
     		@Parameter(description = "guest", required = true) @RequestParam("guest") final String guest,
@@ -143,8 +143,8 @@ public class BookingController {
                 return ResponseEntity.notFound().build();
             }
         }
-	@DeleteMapping(value = "/{id}")
-    public void deleteBooking(@PathVariable("id") final String id) {
+	@DeleteMapping(value = "/")
+    public void deleteBooking(@RequestParam("id") final String id) {
         Booking booking = repository.findById(id).get();
         repository.delete(booking);
     }

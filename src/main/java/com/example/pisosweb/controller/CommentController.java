@@ -45,8 +45,8 @@ public class CommentController {
         }
     }
 
-    @GetMapping("/apartment/{id}")
-    private ResponseEntity<List<Comment>> findByApartment(@PathVariable final String id){
+    @GetMapping("/commentsByApartment")
+    private ResponseEntity<List<Comment>> findByApartment(@RequestParam final String id){
         try{
             return new ResponseEntity<>(commentRepository.findByApartment(id).get(), HttpStatus.OK);
         }catch (Exception e){
@@ -54,8 +54,8 @@ public class CommentController {
         }
     }
 
-    @GetMapping("/user/{id}")
-    private ResponseEntity<List<Comment>> findByUser(@PathVariable final String id){
+    @GetMapping("/commentsByUser")
+    private ResponseEntity<List<Comment>> findByUser(@RequestParam final String id){
         try{
             return new ResponseEntity<>(commentRepository.findByUser(id).get(), HttpStatus.OK);
         }catch (Exception e){
@@ -63,7 +63,7 @@ public class CommentController {
         }
     }
 
-    @PostMapping( "/addComment")
+    @PostMapping("/")
     private ResponseEntity<Comment> addComment(
             @Parameter(description = "user", required = true) @RequestParam("user") final String user,
             @Parameter(description = "apartment", required = true) @RequestParam("apartment") final String apartment,
@@ -84,7 +84,7 @@ public class CommentController {
         }
     }
 
-    @PutMapping( "/updateComment")
+    @PutMapping("/")
     public ResponseEntity<Comment> updateComment(
             @Parameter(description = "id", required = true) @RequestParam("id") final String id,
             @Parameter(description = "user", required = true) @RequestParam("user") final String user,
@@ -106,8 +106,8 @@ public class CommentController {
     }
 
 
-    @DeleteMapping("/delete/{id}")
-    private void deleteComment(@PathVariable final String id){
+    @DeleteMapping("/")
+    private void deleteComment(@RequestParam final String id){
         commentRepository.deleteById(id);
     }
 

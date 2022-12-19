@@ -48,12 +48,12 @@ public class UserController {
         return userRepository.findById(id);
     }
     
-    @GetMapping(value = "/accountAuthentication", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/usersByAccountAuthentication", produces = MediaType.APPLICATION_JSON_VALUE)
     public Optional<User> findByAccountAuthentication(@RequestParam("accountAuthentication") String accountAuthentication) {
         return userRepository.findByAccountAuthentication(accountAuthentication);
     }
 
-    @GetMapping(value = "/email", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/usersByEmail", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(description = "List all users by email", responses = {
 			@ApiResponse(content = @Content(array = @ArraySchema(schema = @Schema(implementation = User.class))), responseCode = "200") })
 	public Collection<User> getAllUsersByEmail(
@@ -61,7 +61,7 @@ public class UserController {
 		return userRepository.findByEmail(email);
 	}
     
-    @GetMapping(value = "/name", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/usersByName", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(description = "List all users by name", responses = {
 			@ApiResponse(content = @Content(array = @ArraySchema(schema = @Schema(implementation = User.class))), responseCode = "200") })
 	public Collection<User> getAllUsersByName(
@@ -69,7 +69,7 @@ public class UserController {
 		return userRepository.findByName(name);
 	}
 
-    @GetMapping(value = "/lastname", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/usersByLastname", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(description = "List all users by lastname", responses = {
 			@ApiResponse(content = @Content(array = @ArraySchema(schema = @Schema(implementation = User.class))), responseCode = "200") })
 	public Collection<User> getAllUsersByLastname(
@@ -77,7 +77,7 @@ public class UserController {
 		return userRepository.findByLastname(lastname);
 	}
 
-    @GetMapping(value = "/chatsUsers", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/usersByChats", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(description = "List all persons that chat with a specific user", responses = {
 			@ApiResponse(content = @Content(array = @ArraySchema(schema = @Schema(implementation = User.class))), responseCode = "200") })
 	public Collection<User> getAllUsersChatting(
@@ -104,7 +104,7 @@ public class UserController {
 
 	}
 
-    @GetMapping(value = "/commentUsersFlat", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/usersByCommentInFlat", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(description = "List all users that have sent at least one comment for a specific flat", responses = {
 			@ApiResponse(content = @Content(array = @ArraySchema(schema = @Schema(implementation = User.class))), responseCode = "200") })
 	public Collection<User> getAllCommentsUsersByFlat(
@@ -133,7 +133,7 @@ public class UserController {
 	}
     
     
-    @PostMapping(value = "/addUser")
+    @PostMapping(value = "/")
     public ResponseEntity<User> addUser(
     		@Parameter(description = "email") @RequestParam("email") final String email,
             @Parameter(description = "name") @RequestParam("name") final String name,
@@ -150,7 +150,7 @@ public class UserController {
     }
     
     
-    @PutMapping(value = "/updateUser")
+    @PutMapping(value = "/")
     public ResponseEntity<User> updateUser(
         @Parameter(description = "id", required = true) @RequestParam("id") final String id,
         @Parameter(description = "email", required = false) @RequestParam("email") final String email,
@@ -171,8 +171,8 @@ public class UserController {
             }
         }
     
-    @DeleteMapping(value = "/{id}")
-    public void deleteUser(@PathVariable("id") final String id) {
+    @DeleteMapping(value = "/")
+    public void deleteUser(@RequestParam("id") final String id) {
         User user = userRepository.findById(id).get();
         userRepository.delete(user);
     }

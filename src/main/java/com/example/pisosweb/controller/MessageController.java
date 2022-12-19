@@ -38,34 +38,34 @@ public class MessageController {
         return repository.findById(id);
     }
 
-    @GetMapping(value = "/sender/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/messagesBySender", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(description = "List all messages by one sender", responses = {
 			@ApiResponse(content = @Content(array = @ArraySchema(schema = @Schema(implementation = Message.class))), responseCode = "200") })
-	public Collection<Message> getAllSenderMessages(@PathVariable String userId) {
+	public Collection<Message> getAllSenderMessages(@RequestParam String userId) {
 		return repository.findBySender(userId);
 	}
 
-    @GetMapping(value = "/receiver/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(description = "List all messages by one sender", responses = {
+    @GetMapping(value = "/messagesByReceiver", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(description = "List all messages by one receiver", responses = {
 			@ApiResponse(content = @Content(array = @ArraySchema(schema = @Schema(implementation = Message.class))), responseCode = "200") })
-	public Collection<Message> getAllReceiverMessages(@PathVariable String userId) {
+	public Collection<Message> getAllReceiverMessages(@RequestParam String userId) {
 		return repository.findByReceiver(userId);
 	}
 
-    @GetMapping(value = "/chats/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/messagesByUser", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(description = "List all conversations by one user", responses = {
 			@ApiResponse(content = @Content(array = @ArraySchema(schema = @Schema(implementation = Message.class))), responseCode = "200") })
-	public Collection<Message> getAllUserMessages(@PathVariable String userId) {
+	public Collection<Message> getAllUserMessages(@RequestParam String userId) {
         List<Message> allMessages = new ArrayList<>();
         allMessages.addAll(this.getAllSenderMessages(userId));
         allMessages.addAll(this.getAllReceiverMessages(userId));
 		return allMessages;
 	}
 
-    @GetMapping(value = "/user/{firstUserId}/{secondUserId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/messagesByTwoUsers", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(description = "List a full conversation between two users", responses = {
             @ApiResponse(content = @Content(array = @ArraySchema(schema = @Schema(implementation = Message.class))), responseCode = "200") })
-    public Collection<Message> findBySenderAndReceiver(@PathVariable String firstUserId, @PathVariable String secondUserId) {
+    public Collection<Message> findBySenderAndReceiver(@RequestParam String firstUserId, @RequestParam String secondUserId) {
         List<Message> fullConversation = new ArrayList<>();
         fullConversation.addAll(repository.findBySenderAndReceiver(firstUserId, secondUserId));
         fullConversation.addAll(repository.findBySenderAndReceiver(secondUserId, firstUserId));
@@ -85,7 +85,7 @@ public class MessageController {
 		return repository.findAll();
 	}
 
-    @PostMapping(value = "")
+    @PostMapping(value = "/")
     public ResponseEntity<Message> addMensaje(
             @Parameter(description = "sender", required = true) @RequestParam("sender") final String sender,
             @Parameter(description = "receiver", required = true) @RequestParam("receiver") final String receiver,
@@ -96,7 +96,7 @@ public class MessageController {
     
     }
 
-    @PutMapping(value = "")
+    @PutMapping(value = "/")
     public ResponseEntity<Message> updateMessage(
         @Parameter(description = "id", required = true) @RequestParam("id") final String id,
         @Parameter(description = "content", required = true) @RequestParam("content") final String content) {
@@ -113,8 +113,8 @@ public class MessageController {
         }
     
 
-    @DeleteMapping(value = "/{id}")
-    public void deleteMessage(@PathVariable("id") final String id) {
+    @DeleteMapping(value = "/")
+    public void deleteMessage(@RequestParam("id") final String id) {
             Message mensaje = repository.findById(id).get();
             repository.delete(mensaje);
         }
