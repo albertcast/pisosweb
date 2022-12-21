@@ -15,20 +15,32 @@ public class User{
 	private String lastname;
 	private Integer age;
 	private String accountAuthentication;
+	private String image;
 	
 	public User() {
 	}
 	
-	public User(String email, String name, String lastname, Integer age, String accountAuthentication) {
+	public User(String email, String name, String lastname, Integer age, String accountAuthentication, String image) {
 		
 		this.email=email;
 		this.name=name;
 		this.lastname=lastname;
 		this.age=age;
 		this.accountAuthentication = accountAuthentication;
+		this.image = image;
 	}
 	
-    public String getUsuarioId() {
+	
+	
+    public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
+
+	public String getUsuarioId() {
         return this.id;
     }
 	

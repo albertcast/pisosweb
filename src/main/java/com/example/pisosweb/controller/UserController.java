@@ -12,7 +12,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.example.pisosweb.document.Comment;
 import com.example.pisosweb.document.Message;
 import com.example.pisosweb.document.User;
@@ -20,6 +23,7 @@ import com.example.pisosweb.repository.CommentRepository;
 import com.example.pisosweb.repository.MessageRepository;
 import com.example.pisosweb.repository.UserRepository;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -40,7 +44,9 @@ public class UserController {
     private MessageRepository mensajeRepository;
     @Autowired
     private CommentRepository comentarioRepository;
-    
+	private String cloud_name = "dazcrlzub";
+	private String cloud_ak = "589373914839945";
+	private String cloud_as = "HPtGK-hYaxWzREnHoELcHIucbdQ";
    
 	
     @GetMapping("/{id}")
@@ -139,9 +145,11 @@ public class UserController {
             @Parameter(description = "name") @RequestParam("name") final String name,
             @Parameter(description = "lastname") @RequestParam("lastname") final String lastname,
             @Parameter(description = "age") @RequestParam("age") final Integer age,
-            @Parameter(description = "accountAuthentication", required = true) @RequestParam("accountAuthentication") final String accountAuthentication) throws ParseException {
+            @Parameter(description = "accountAuthentication", required = true) @RequestParam("accountAuthentication") final String accountAuthentication,
+    		@Parameter(description = "Image", required = false) @RequestParam("image") String image) throws ParseException, IOException {
     	if(findByAccountAuthentication(accountAuthentication).isEmpty()) {
-	        User user = userRepository.insert(new User(email, name, lastname, age, accountAuthentication));
+    		
+	        User user = userRepository.insert(new User(email, name, lastname, age, accountAuthentication, image));
 	        return ResponseEntity.ok(user);
     	} else {
     		return null;
@@ -150,20 +158,33 @@ public class UserController {
     }
     
     
-    @PutMapping(value = "/")
+    @PutMapping(value = "/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<User> updateUser(
         @Parameter(description = "id", required = true) @RequestParam("id") final String id,
         @Parameter(description = "email", required = false) @RequestParam("email") final String email,
         @Parameter(description = "name", required = false) @RequestParam("name") final String name,
         @Parameter(description = "lastname", required = false) @RequestParam("lastname") final String lastname,
-        @Parameter(description = "age", required = false) @RequestParam("age") final Integer age) throws ParseException  {
+        @Parameter(description = "age", required = false) @RequestParam("age") final Integer age,
+		@Parameter(description = "Image", required = false) @RequestParam("image") MultipartFile image) throws ParseException, IOException  {
             Optional<User> userOpt = userRepository.findById(id);
             if(!userOpt.isEmpty()) {
+            	Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
+            			"cloud_name", cloud_name,
+            			"api_key", cloud_ak,
+            			"api_secret", cloud_as,
+            			"secure", true));
+            	
+            	Map params = ObjectUtils.asMap(
+            		    "public_id", image.getOriginalFilename(), 
+            		    "resource_type", "image"         
+            		);
+            	String imString = cloudinary.uploader().upload(image.getBytes(), params).get("url").toString();
                 User user = userOpt.get();
                 user.setEmail(email);
                 user.setNombre(name);
                 user.setApellidos(lastname);
                 user.setEdad(age);
+                user.setImage(imString);
                 user = userRepository.save(user);
                 return ResponseEntity.ok(user);
             } else {
