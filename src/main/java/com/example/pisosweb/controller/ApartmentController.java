@@ -29,6 +29,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -117,6 +118,7 @@ public class ApartmentController {
             @Parameter(description = "capacity", required = true) @RequestParam("capacity") final int capacity,
             @Parameter(description = "price", required = true) @RequestParam("price") final int price,
 			@Parameter(description = "Image", required = false) @RequestParam("image") MultipartFile image) throws ParseException, IOException {
+    	
     	Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
     			"cloud_name", cloud_name,
     			"api_key", cloud_ak,
@@ -138,6 +140,7 @@ public class ApartmentController {
     }
 
     @PutMapping(value = "/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    
     public ResponseEntity<Apartment> updateFlat(
         @Parameter(description = "id", required = true) @RequestParam("id") final String id,
         @Parameter(description = "title", required = false) @RequestParam("title") final String title,
@@ -146,20 +149,9 @@ public class ApartmentController {
         @Parameter(description = "date", required = false) @RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") final Date date,
         @Parameter(description = "capacity", required = true) @RequestParam("capacity") final int capacity,
         @Parameter(description = "price", required = true) @RequestParam("price") final int price,
-		@Parameter(description = "Image", required = false) @RequestParam("image") MultipartFile image) throws ParseException, IOException  {
+		@Nullable @Parameter(description = "Image", required = false) @RequestParam("image") MultipartFile image) throws ParseException, IOException  {
             Optional<Apartment> apartmentOpt = repository.findById(id);
             if(!apartmentOpt.isEmpty()) {
-            	Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
-            			"cloud_name", cloud_name,
-            			"api_key", cloud_ak,
-            			"api_secret", cloud_as,
-            			"secure", true));
-            	
-            	Map params = ObjectUtils.asMap(
-            		    "public_id", image.getOriginalFilename(), 
-            		    "resource_type", "image"         
-            		);
-            	String imString = cloudinary.uploader().upload(image.getBytes(), params).get("url").toString();
             	
             	
                 Apartment apartment = apartmentOpt.get();
@@ -172,7 +164,21 @@ public class ApartmentController {
                 apartment.setDescription(description);
                 apartment.setCapacity(capacity);
                 apartment.setPrice(price);
-                apartment.setImage(imString);
+                if(image != null) {
+                	Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
+                			"cloud_name", cloud_name,
+                			"api_key", cloud_ak,
+                			"api_secret", cloud_as,
+                			"secure", true));
+                	
+                	Map params = ObjectUtils.asMap(
+                		    "public_id", image.getOriginalFilename(), 
+                		    "resource_type", "image"         
+                		);
+                	String imString = cloudinary.uploader().upload(image.getBytes(), params).get("url").toString();
+                	
+                	apartment.setImage(imString);
+                }
                 apartment = repository.save(apartment);
                 return ResponseEntity.ok(apartment);
             } else {
