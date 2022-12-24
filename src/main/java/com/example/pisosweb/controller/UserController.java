@@ -10,7 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -165,7 +165,7 @@ public class UserController {
         @Parameter(description = "name", required = false) @RequestParam("name") final String name,
         @Parameter(description = "lastname", required = false) @RequestParam("lastname") final String lastname,
         @Parameter(description = "age", required = false) @RequestParam("age") final Integer age,
-		@Parameter(description = "Image", required = false) @RequestParam("image") MultipartFile image) throws ParseException, IOException  {
+        @Nullable @Parameter(description = "Image", required = false) @RequestParam("image") MultipartFile image) throws ParseException, IOException  {
             Optional<User> userOpt = userRepository.findById(id);
             if(!userOpt.isEmpty()) {
             	Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
