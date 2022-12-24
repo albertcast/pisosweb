@@ -148,12 +148,11 @@ public class DatosAbiertosController {
 	
 	@Operation(description = "Introduce latitud y longitud, devuelve las paradas de autobus más cercanas en un determinado radio. Ejemplo: latitud 36.737835, longitud -4.4222507, rango 0.005. Tarda un rato. ", responses = {
 			@ApiResponse(responseCode = "200", description = "Paradas encontradas") })
-	@GetMapping(value="/mostrarParadasBusCercana")
+	@GetMapping(value="/mostrarParadasBusCercana", produces =MediaType.APPLICATION_JSON_VALUE)
 	public static String mostrarParadasBusCercana(float latitud, float longitud, float rango) throws IOException{
 		try {
 			String url = "https://datosabiertos.malaga.eu/recursos/transporte/EMT/EMTLineasYParadas/lineasyparadas.geojson";
 			BufferedReader rd = new BufferedReader(new InputStreamReader(new URL(url).openStream(), Charset.forName("UTF-8")));
-			
 			String jsonText = readAll(rd);
 			JSONArray jsonArray = new JSONArray(jsonText);
 
@@ -176,24 +175,37 @@ public class DatosAbiertosController {
 					//Aux = objeto interno de paradas
 					JSONObject aux = arrayParadas.getJSONObject(i);
 					//Buscar parada
-					float auxLat = aux.getJSONObject("parada").getFloat("latitud"), auxLong = aux.getJSONObject("parada").getFloat("longitud");					
-					if((Math.abs(latitud - auxLat) + Math.abs(longitud - auxLong)) < rango) {
+					float auxLat = aux.getJSONObject("parada").getFloat("latitud"), auxLong = aux.getJSONObject("parada").getFloat("longitud");		
+					
+					final int R = 6371; // Radius of the earth
+
+				    double latDistance = Math.toRadians(auxLat - latitud);
+				    double lonDistance = Math.toRadians(auxLong - longitud);
+				    double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+				            + Math.cos(Math.toRadians(latitud)) * Math.cos(Math.toRadians(auxLat))
+				            * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+				    double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+				    double distance = R * c * 1000; // convert to meters
+
+
+				    distance = Math.pow(distance, 2);
+					
+					
+					if(Math.sqrt(distance) < rango ) {
 						paradasList.add(arrayParadas.getJSONObject(i));
 					}
 				}
 			}
-			
-			
-			
-			String resultado = "Paradas: \n";
+
+			JSONArray res = new JSONArray();
 			for (JSONObject jsonObject : paradasList) {
-				resultado += "Nombre: " + jsonObject.getJSONObject("parada").getString("nombreParada");
-				resultado += ", direccion: " + jsonObject.getJSONObject("parada").getString("direccion");
-				resultado += ", latitud|longitud: " + jsonObject.getJSONObject("parada").getFloat("latitud") + "|" + jsonObject.getJSONObject("parada").getFloat("longitud") + ",\n";
+				res.put(jsonObject);
 			}
 			
+			
+			
 			rd.close();
-			return resultado;
+			return res.toString();
 			
 		} finally {
 		}
