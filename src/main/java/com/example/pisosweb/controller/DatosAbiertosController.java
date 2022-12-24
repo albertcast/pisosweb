@@ -168,7 +168,8 @@ public class DatosAbiertosController {
 			
 			//Sobre cada linea
 			while(jIterator.hasNext()) {
-				JSONArray arrayParadas = jIterator.next().getJSONArray("paradas");
+				JSONObject linea = jIterator.next();
+				JSONArray arrayParadas = linea.getJSONArray("paradas");
 				
 				//Sobre la lista de paradas
 				for(int i = 0; i < arrayParadas.length(); i++) {
@@ -192,6 +193,7 @@ public class DatosAbiertosController {
 					
 					
 					if(Math.sqrt(distance) < rango ) {
+						arrayParadas.getJSONObject(i).put("linea", linea.get("codLineaStr"));
 						paradasList.add(arrayParadas.getJSONObject(i));
 					}
 				}
