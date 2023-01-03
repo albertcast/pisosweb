@@ -64,7 +64,7 @@ public class UserController {
 			@ApiResponse(content = @Content(array = @ArraySchema(schema = @Schema(implementation = User.class))), responseCode = "200") })
 	public Collection<User> getAllUsersByEmail(
         @Parameter(description = "email", required = true) @RequestParam("email") final String email) {
-		return userRepository.findByEmail(email);
+		return userRepository.findByEmailContainsIgnoreCase(email);
 	}
     
     @GetMapping(value = "/usersByName", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -72,7 +72,7 @@ public class UserController {
 			@ApiResponse(content = @Content(array = @ArraySchema(schema = @Schema(implementation = User.class))), responseCode = "200") })
 	public Collection<User> getAllUsersByName(
         @Parameter(description = "name", required = true) @RequestParam("name") final String name) {
-		return userRepository.findByName(name);
+		return userRepository.findByNameContainsIgnoreCase(name);
 	}
 
     @GetMapping(value = "/usersByLastname", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -80,7 +80,7 @@ public class UserController {
 			@ApiResponse(content = @Content(array = @ArraySchema(schema = @Schema(implementation = User.class))), responseCode = "200") })
 	public Collection<User> getAllUsersByLastname(
         @Parameter(description = "lastname", required = true) @RequestParam("lastname") final String lastname) {
-		return userRepository.findByLastname(lastname);
+		return userRepository.findByLastnameContainsIgnoreCase(lastname);
 	}
 
     @GetMapping(value = "/usersByChats", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -149,7 +149,7 @@ public class UserController {
     		@Parameter(description = "Image", required = false) @RequestParam("image") String image) throws ParseException, IOException {
     	if(findByAccountAuthentication(accountAuthentication).isEmpty()) {
     		
-	        User user = userRepository.insert(new User(email, name, lastname, age, accountAuthentication, image));
+	        User user = userRepository.insert(new User(email, name, lastname, age, accountAuthentication, image, false));
 	        return ResponseEntity.ok(user);
     	} else {
     		return null;

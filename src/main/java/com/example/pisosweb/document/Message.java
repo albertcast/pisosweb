@@ -1,8 +1,11 @@
 package com.example.pisosweb.document;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import org.springframework.data.annotation.Id;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class Message {
     @Id
@@ -10,15 +13,15 @@ public class Message {
     private String sender;
     private String receiver;
     private String content;
-    private Date date;
-    
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	private LocalDateTime timestamp;    
     public Message() {}
 
-    public Message(String sender, String receiver, String content, Date date) {
+    public Message(String sender, String receiver, String content, LocalDateTime timestamp) {
         this.sender = sender;
         this.receiver = receiver;
         this.content = content;
-        this.date = date;
+        this.timestamp = timestamp;
     }
 
     public String getId() {
@@ -53,12 +56,12 @@ public class Message {
         this.content = content;
     }
 
-    public Date getDate() {
-        return this.date;
+    public LocalDateTime getDate() {
+        return this.timestamp;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setDate(LocalDateTime timestamp) {
+        this.timestamp = timestamp;
     }
 
     @Override

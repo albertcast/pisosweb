@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.*;
 
 import io.swagger.v3.oas.annotations.Operation;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -62,7 +64,7 @@ public class MessageController {
 		return allMessages;
 	}
 
-    @GetMapping(value = "/messagesByTwoUsers", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/messagesBetweenUsers", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(description = "List a full conversation between two users", responses = {
             @ApiResponse(content = @Content(array = @ArraySchema(schema = @Schema(implementation = Message.class))), responseCode = "200") })
     public Collection<Message> findBySenderAndReceiver(@RequestParam String firstUserId, @RequestParam String secondUserId) {
@@ -90,8 +92,11 @@ public class MessageController {
             @Parameter(description = "sender", required = true) @RequestParam("sender") final String sender,
             @Parameter(description = "receiver", required = true) @RequestParam("receiver") final String receiver,
             @Parameter(description = "content", required = true) @RequestParam("content") final String content) {
-
-        Message mensaje = repository.insert(new Message(sender, receiver, content, new Date(System.currentTimeMillis())));
+    	DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");  
+		String formatDateTime = LocalDateTime.now().format(format);
+        LocalDateTime ldt = LocalDateTime.parse(formatDateTime, format);
+        
+        Message mensaje = repository.insert(new Message(sender, receiver, content, ldt));
         return ResponseEntity.ok(mensaje);
     
     }

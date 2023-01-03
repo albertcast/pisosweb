@@ -16,11 +16,12 @@ public class User{
 	private Integer age;
 	private String accountAuthentication;
 	private String image;
+	private boolean isAdmin;
 	
 	public User() {
 	}
 	
-	public User(String email, String name, String lastname, Integer age, String accountAuthentication, String image) {
+	public User(String email, String name, String lastname, Integer age, String accountAuthentication, String image, boolean isAdmin) {
 		
 		this.email=email;
 		this.name=name;
@@ -28,6 +29,7 @@ public class User{
 		this.age=age;
 		this.accountAuthentication = accountAuthentication;
 		this.image = image;
+		this.isAdmin = isAdmin;
 	}
 	
 	
@@ -86,6 +88,14 @@ public class User{
 
 	public void setAccountAuthentication(String accountAuthentication) {
 		this.accountAuthentication = accountAuthentication;
+	}
+
+	public boolean isAdmin() {
+		return isAdmin;
+	}
+
+	public void setAdmin(boolean isAdmin) {
+		this.isAdmin = isAdmin;
 	}
 
 	
