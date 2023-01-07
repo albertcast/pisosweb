@@ -117,7 +117,9 @@ public class ApartmentController {
             @Parameter(description = "owner", required = true) @RequestParam("owner") final String owner,
             @Parameter(description = "capacity", required = true) @RequestParam("capacity") final int capacity,
             @Parameter(description = "price", required = true) @RequestParam("price") final int price,
-			@Parameter(description = "Image", required = false) @RequestParam("image") MultipartFile image) throws ParseException, IOException {
+			@Parameter(description = "Image", required = false) @RequestParam("image") MultipartFile image,
+            @Parameter(description = "latitude", required = true) @RequestParam("latitude") final float latitude,
+            @Parameter(description = "longitude", required = true) @RequestParam("longitude") final float longitude) throws ParseException, IOException {
     	
     	Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
     			"cloud_name", cloud_name,
@@ -135,7 +137,7 @@ public class ApartmentController {
     	Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         calendar.add(Calendar.HOUR_OF_DAY, 1);
-        Apartment apartment = repository.insert(new Apartment(title, place, description, calendar.getTime(), owner, capacity,price, imString));
+        Apartment apartment = repository.insert(new Apartment(title, place, description, calendar.getTime(), owner, capacity,price, imString, latitude, longitude));
         return ResponseEntity.ok(apartment);
     }
 
@@ -149,7 +151,9 @@ public class ApartmentController {
         @Parameter(description = "date", required = false) @RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") final Date date,
         @Parameter(description = "capacity", required = true) @RequestParam("capacity") final int capacity,
         @Parameter(description = "price", required = true) @RequestParam("price") final int price,
-		@Nullable @Parameter(description = "Image", required = false) @RequestParam("image") MultipartFile image) throws ParseException, IOException  {
+		@Nullable @Parameter(description = "Image", required = false) @RequestParam("image") MultipartFile image,
+        @Parameter(description = "latitude", required = true) @RequestParam("latitude") final float latitude,
+        @Parameter(description = "longitude", required = true) @RequestParam("longitude") final float longitude) throws ParseException, IOException  {
             Optional<Apartment> apartmentOpt = repository.findById(id);
             if(!apartmentOpt.isEmpty()) {
             	
@@ -164,6 +168,8 @@ public class ApartmentController {
                 apartment.setDescription(description);
                 apartment.setCapacity(capacity);
                 apartment.setPrice(price);
+                apartment.setLatitude(latitude);
+                apartment.setLongitude(longitude);
                 if(image != null) {
                 	Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
                 			"cloud_name", cloud_name,

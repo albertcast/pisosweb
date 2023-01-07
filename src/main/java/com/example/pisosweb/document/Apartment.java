@@ -15,10 +15,11 @@ public class Apartment {
     private int price;
     private int capacity;
     private String image;
+    private float latitude, longitude;
 
     public Apartment() {}
 
-    public Apartment(String title, String place, String description, Date date, String owner, int capacity, int price, String image) {
+    public Apartment(String title, String place, String description, Date date, String owner, int capacity, int price, String image, float latitude, float longitude) {
         this.title = title;
         this.place = place;
         this.description = description;
@@ -27,6 +28,8 @@ public class Apartment {
         this.capacity = capacity;
         this.price = price;
         this.image = image;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
 
@@ -100,6 +103,22 @@ public class Apartment {
 
 	public void setCapacity(int capacity) {
 		this.capacity = capacity;
+	}
+
+	public float getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(float latitude) {
+		this.latitude = latitude;
+	}
+
+	public float getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(float longitude) {
+		this.longitude = longitude;
 	}
 	
 	
