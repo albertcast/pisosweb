@@ -33,7 +33,7 @@ import java.util.Map;
 import java.util.Optional;
 
 
-@CrossOrigin(origins = {"http://localhost:8080","https://pisoswebcliente.herokuapp.com"})
+@CrossOrigin(origins = {"http://localhost:8080","https://pisoswebcliente.herokuapp.com", "https://pisoswebserverrailway.com"})
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
