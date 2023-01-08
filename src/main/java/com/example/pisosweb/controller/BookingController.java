@@ -43,7 +43,6 @@ import com.example.pisosweb.repository.BookingRepository;
 
 
 
-@CrossOrigin(origins = {"http://localhost:8080","https://pisoswebcliente.herokuapp.com"})
 @RestController
 @RequestMapping("/api/booking")
 public class BookingController {

@@ -44,7 +44,6 @@ import com.example.pisosweb.document.User;
 import com.example.pisosweb.repository.ApartmentRepository;
 import com.example.pisosweb.repository.UserRepository;
 
-@CrossOrigin(origins = {"http://localhost:8080","https://pisoswebcliente.herokuapp.com"})
 @RestController
 @RequestMapping("/api/apartment")
 public class ApartmentController {

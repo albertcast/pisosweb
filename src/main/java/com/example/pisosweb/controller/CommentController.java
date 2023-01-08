@@ -17,7 +17,6 @@ import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.*;
 
-@CrossOrigin(origins = {"http://localhost:8080","https://pisoswebcliente.herokuapp.com"})
 @RestController
 @RequestMapping("/api/comment")
 public class CommentController {
