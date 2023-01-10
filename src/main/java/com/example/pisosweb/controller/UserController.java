@@ -167,23 +167,26 @@ public class UserController {
         @Nullable @Parameter(description = "Image", required = false) @RequestParam("image") MultipartFile image) throws ParseException, IOException  {
             Optional<User> userOpt = userRepository.findById(id);
             if(!userOpt.isEmpty()) {
-            	Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
-            			"cloud_name", cloud_name,
-            			"api_key", cloud_ak,
-            			"api_secret", cloud_as,
-            			"secure", true));
-            	
-            	Map params = ObjectUtils.asMap(
-            		    "public_id", image.getOriginalFilename(), 
-            		    "resource_type", "image"         
-            		);
-            	String imString = cloudinary.uploader().upload(image.getBytes(), params).get("url").toString();
                 User user = userOpt.get();
+                if(image != null) {
+	            	Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
+	            			"cloud_name", cloud_name,
+	            			"api_key", cloud_ak,
+	            			"api_secret", cloud_as,
+	            			"secure", true));
+	            	
+	            	Map params = ObjectUtils.asMap(
+	            		    "public_id", image.getOriginalFilename(), 
+	            		    "resource_type", "image"         
+	            		);
+	            	String imString = cloudinary.uploader().upload(image.getBytes(), params).get("url").toString();
+	                user.setImage(imString);
+
+                }
                 user.setEmail(email);
                 user.setNombre(name);
                 user.setApellidos(lastname);
                 user.setEdad(age);
-                user.setImage(imString);
                 user = userRepository.save(user);
                 return ResponseEntity.ok(user);
             } else {
